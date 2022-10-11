@@ -88,7 +88,7 @@ export default function SignUp() {
                     aria-hidden="true"
                   />
                 </span>
-                Auf geht's!
+                Auf geht&#39;s!
               </button>
             </div>
             <div>
