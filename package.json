@@ -9,12 +9,26 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.3",
+    "@heroicons/react": "^1.0.6",
+    "@material-tailwind/react": "^1.2.4",
+    "@next-auth/typeorm-legacy-adapter": "^0.1.2-next.20",
     "axios": "^1.1.2",
+    "bcrypt": "^5.1.0",
+    "country-flag-icons": "^1.5.5",
+    "crypto": "^1.0.1",
     "dotenv": "^16.0.3",
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^2.3.3",
     "next": "12.3.1",
+    "next-auth": "^4.12.3",
     "nodemailer": "^6.8.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-icons": "^4.4.0",
+    "react-router-dom": "^6.4.2",
+    "react-toastify": "^9.0.8",
+    "typeorm": "^0.3.10"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.12",

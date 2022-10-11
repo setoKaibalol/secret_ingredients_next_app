@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html,
 body {
   padding: 0;
@@ -22,5 +26,57 @@ a {
   body {
     color: white;
     background: black;
+  }
+}
+
+:root {
+  background-color: #033249;
+}
+
+.skeleton {
+  animation: skeleton-loading 1s linear infinite alternate;
+  color: transparent;
+  opacity: 0.7;
+  border-radius: 0.25rem;
+}
+
+.skeleton:hover {
+  color: transparent;
+}
+
+#hexLabel {
+  background-color: azure;
+  padding: 2px;
+  border-radius: 2px;
+  color: black;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  margin-top: 64px;
+  background: rgba(0, 0, 0, 0.1);
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #ff8038;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ff650c;
+}
+::-webkit-scrollbar-thumb:active {
+  background: #be4600;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: hsl(200, 20%, 70%);
+  }
+  100% {
+    background-color: hsl(200, 20%, 95%);
   }
 }
