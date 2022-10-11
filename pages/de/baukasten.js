@@ -300,7 +300,7 @@ function Baukasten() {
     <div className="flex bg-[url('/src/Media/Images/cuttingBoardBackground.jpg')] bg-contain">
       <div className="absolute text-black">
         {displayRecipes.map((recipe, index) => (
-          <div> {recipe.recipeName}</div>
+          <div key={index}> {recipe.recipeName}</div>
         ))}
       </div>
       <div className="flex w-full md:w-5/6 2xl:w-4/6 m-auto">
