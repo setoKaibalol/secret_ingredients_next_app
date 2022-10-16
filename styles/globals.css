@@ -2,46 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: white;
-    background: black;
-  }
-}
-
 :root {
   background-color: #184053;
-}
-
-.skeleton {
-  animation: skeleton-loading 1s linear infinite alternate;
-  color: transparent;
-  opacity: 0.7;
-  border-radius: 0.25rem;
-}
-
-.skeleton:hover {
-  color: transparent;
 }
 
 #hexLabel {
@@ -70,13 +32,4 @@ a {
 }
 ::-webkit-scrollbar-thumb:active {
   background: #be4600;
-}
-
-@keyframes skeleton-loading {
-  0% {
-    background-color: hsl(200, 20%, 70%);
-  }
-  100% {
-    background-color: hsl(200, 20%, 95%);
-  }
 }
