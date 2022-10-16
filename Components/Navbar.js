@@ -83,7 +83,7 @@ export default function Header() {
 
                 <div className="flex-1 flex items-center justify-center sm:justify-start">
                   <div className="items-center">
-                    <div className="block lg:hidden">
+                    <div className="lg:hidden">
                       <Link passHref href="/">
                         <a>
                           <Image
