@@ -1,5 +1,5 @@
 import { Disclosure, Menu } from "@headlessui/react"
-import { MenuIcon, BellIcon, UserIcon } from "@heroicons/react/outline"
+import { MenuIcon, BellIcon, UserIcon, XIcon } from "@heroicons/react/outline"
 import Link from "next/link"
 import { US, DE } from "country-flag-icons/react/3x2"
 import { useSession, signIn, signOut } from "next-auth/react"
@@ -65,7 +65,7 @@ export default function Header() {
 
   return (
     <div className="sticky z-20 top-0 bg-dark-blue dark:bg-dark-blue backdrop-filter backdrop-blur-lg bg-opacity-60 dark:backdrop-filter dark:backdrop-blur-lg dark:bg-opacity-75 border-b border-bright-orange dark:border-bright-orange">
-      <Disclosure as="nav">
+      <Disclosure>
         {({ open }) => (
           <>
             <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
@@ -83,30 +83,34 @@ export default function Header() {
 
                 <div className="flex-1 flex items-center justify-center sm:justify-start">
                   <div className="items-center">
-                    <Link href="/">
-                      <div className="lg:hidden">
-                        <Image
-                          id="mobile-logo"
-                          className="h-16 w-auto cursor-pointer"
-                          height={40}
-                          width={40}
-                          src="/media/logo/originial_no_text.png"
-                          alt="mobile-logo"
-                        />
-                      </div>
-                    </Link>
-                    <Link href="/" className="align-text">
-                      <div className="hidden relative lg:inline">
-                        <Image
-                          id="logo"
-                          className="h-14 w-auto cursor-pointer"
-                          src="/media/logo/originial_no_text.png"
-                          height={55}
-                          width={55}
-                          alt="logo"
-                        />
-                      </div>
-                    </Link>
+                    <div className="block lg:hidden">
+                      <Link passHref href="/">
+                        <a>
+                          <Image
+                            id="mobile-logo"
+                            className="h-16 w-auto cursor-pointer"
+                            height={40}
+                            width={40}
+                            src="/media/logo/originial_no_text.png"
+                            alt="mobile-logo"
+                          />
+                        </a>
+                      </Link>
+                    </div>
+                    <div className="hidden lg:block">
+                      <Link passHref href="/">
+                        <a>
+                          <Image
+                            id="logo"
+                            className="h-14 w-auto cursor-pointer"
+                            src="/media/logo/originial_no_text.png"
+                            height={55}
+                            width={55}
+                            alt="logo"
+                          />
+                        </a>
+                      </Link>
+                    </div>
                   </div>
                   <div className="hidden lg:pl-20 sm:block sm:ml-2">
                     <div className="flex space-x-1 md:space-x-4">
