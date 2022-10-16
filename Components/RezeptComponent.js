@@ -7,7 +7,6 @@ import {
 } from "@heroicons/react/outline"
 
 function RezeptComponent(item, index) {
-  console.log(item)
   return (
     <div
       id="rezept-card"
