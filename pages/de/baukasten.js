@@ -297,7 +297,7 @@ function Baukasten() {
   }
 
   return (
-    <div className="flex bg-[url('/src/Media/Images/cuttingBoardBackground.jpg')] bg-contain">
+    <div className="flex bg-[url('/media/cuttingBoardBackground.jpg')] bg-contain">
       <div className="absolute text-black">
         {displayRecipes.map((recipe, index) => (
           <div key={index}> {recipe.recipeName}</div>
@@ -309,7 +309,7 @@ function Baukasten() {
             id="rezeptName-input-div"
             className="w-5/6 mb-10 items-center flex flex-row justify-center bg-opacity-90 bg-dark-blue border border-bright-orange rounded-3xl"
           >
-            <div className=" w-full p-4">
+            <div className=" relative w-full flex items-center flex-col justify-center p-4">
               <label
                 htmlFor="rezeptName-input"
                 className="text-bright-orange font-medium text-3xl mb-4 underline underline-offset-4"
@@ -319,32 +319,36 @@ function Baukasten() {
               <input
                 id="rezeptName-input"
                 required
-                className="appearance-none rounded-full relative block w-3/6 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
+                className="bg-white appearance-none rounded-full relative block w-3/6 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
                 placeholder=". . ."
                 value={recipe.name}
                 name="name"
                 onChange={handleChange}
               ></input>
             </div>
-            <div className="w-1/6">
-              <label
-                htmlFor="recipe-type-select"
-                className="text-white text-lg pl-4"
-              >
-                Rezept Typ:
-              </label>
-              <select
-                required
-                className="text-black rounded-full focus:outline-none focus:ring-bright-orange focus:border-bright-orange"
-                id="recipe-type-select"
-                name="recipeType"
-                value={recipe.recipeType}
-                onChange={(e) => handleChange(e)}
-              >
-                <option>Grundrezept</option>
-                <option>Geheimrezept</option>
-                <option>Userrezept</option>
-              </select>
+            <div className="absolute w-[50%] flex flex-col">
+              <div className="w-full flex flex-col items-end">
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="recipe-type-select"
+                    className="text-white text-lg pl-4"
+                  >
+                    Rezept Typ:
+                  </label>
+                  <select
+                    required
+                    className="text-black bg-white rounded-full focus:outline-none px-4 py-2 focus:ring-bright-orange focus:border-bright-orange"
+                    id="recipe-type-select"
+                    name="recipeType"
+                    value={recipe.recipeType}
+                    onChange={(e) => handleChange(e)}
+                  >
+                    <option>Grundrezept</option>
+                    <option>Geheimrezept</option>
+                    <option>Userrezept</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
           <label
@@ -388,7 +392,7 @@ function Baukasten() {
                             className="text-white text-sm"
                           ></label>
                           <input
-                            className="appearance-none rounded-full relative block w-5/6 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
+                            className="bg-white appearance-none rounded-full relative block w-5/6 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
                             id="zutat-input"
                             required
                             type={"text"}
@@ -406,7 +410,7 @@ function Baukasten() {
                             className="text-white text-sm text-center"
                           ></label>
                           <input
-                            className="appearance-none  rounded-full relative block w-full px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
+                            className="bg-white appearance-none rounded-full relative block w-full px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
                             id="zutat-input"
                             name="menge"
                             value={zutat.menge}
@@ -422,7 +426,7 @@ function Baukasten() {
                             className="text-white text-sm ml-4"
                           ></label>
                           <input
-                            className="appearance-none  rounded-full relative block w-full px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
+                            className="appearance-none bg-white rounded-full relative block w-full px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
                             id="zutat-input"
                             name="einheit"
                             value={zutat.einheit}
@@ -438,7 +442,7 @@ function Baukasten() {
                           className="text-white text-sm pl-4"
                         ></label>
                         <input
-                          className="appearance-none rounded-full max-h-10 relative block w-5/6 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10 "
+                          className="appearance-none bg-white rounded-full max-h-10 relative block w-5/6 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10 "
                           id="zutat-input"
                           name="kommentar"
                           value={zutat.kommentar}
@@ -489,7 +493,7 @@ function Baukasten() {
                   <div className="flex-row flex items-center p-1">
                     <input
                       required
-                      className=" rounded-full h-10 relative block w-24 pl-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10 "
+                      className="bg-white rounded-full h-10 relative block w-24 pl-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10 "
                       id="zubereitungszeit"
                       name="zubereitungszeit"
                       type={"time"}
@@ -531,7 +535,7 @@ function Baukasten() {
                   <div className="flex-row flex items-center p-1 space-x-1">
                     <input
                       required
-                      className="appearance-none rounded-full max-h-10 relative block w-20 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10 "
+                      className="appearance-none bg-white rounded-full max-h-10 relative block w-20 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10 "
                       id="portionen"
                       name="portionen"
                       type={"number"}
@@ -550,7 +554,7 @@ function Baukasten() {
                   </label>
                   <select
                     required
-                    className="text-black rounded-full focus:outline-none focus:ring-bright-orange focus:border-bright-orange"
+                    className="text-gray-900 bg-white rounded-full focus:outline-none px-4 py-2 focus:ring-bright-orange focus:border-bright-orange focus:z-10"
                     id="schwierigkeitsgrad"
                     name="schwierigkeitsgrad"
                     value={recipe.schwierigkeitsgrad}
@@ -572,7 +576,7 @@ function Baukasten() {
                     Küchenutensilien(optional):
                   </label>
                   <textarea
-                    className="mb-5 appearance-none rounded-3xl relative block w-full self-end px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
+                    className="mb-5 bg-white appearance-none rounded-3xl relative block w-full self-end px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
                     id="wichtigeUtensilien"
                     name="wichtigeUtensilien"
                     value={recipe.wichtigeUtensilien}
@@ -589,7 +593,7 @@ function Baukasten() {
                   </label>
                   <div className="flex items-end w-full justify-end">
                     <textarea
-                      className="mb-5 appearance-none rounded-3xl relative block w-full px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
+                      className="mb-5 bg-white appearance-none rounded-3xl relative block w-full px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
                       id="quellen"
                       name="quellen"
                       placeholder="..."
@@ -629,7 +633,7 @@ function Baukasten() {
                         onChange={(e) => {
                           handleChangeSteps(e, step)
                         }}
-                        className="w-full mb-2 text-lg appearance-none rounded-3xl relative block h-24 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
+                        className="bg-white w-full mb-2 text-lg appearance-none rounded-3xl relative block h-24 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
                         type={"text"}
                         placeholder={`${step.id + 1}. Schritt...`}
                       ></textarea>
@@ -712,7 +716,7 @@ function Baukasten() {
           ></label>
           <div
             id="recipe-image-upload"
-            className="h-[380px] w-full p-4 bg-dark-blue w-lg mb-5 rounded-3xl bg-opacity-90 border-2 border-bright-orange"
+            className="h-[380px] w-full p-4 bg-dark-blue w-lg mb-10 rounded-3xl bg-opacity-90 border-2 border-bright-orange"
           >
             <div className="w-full flex justify-center">
               <h2 className="text-xl text-white font-medium py-2 pb-4">
@@ -788,17 +792,16 @@ function Baukasten() {
           </div>
           <div
             id="rezeptName-input-div"
-            className="items-center flex flex-col justify-center bg-opacity-90 bg-dark-blue p-3 border border-bright-orange  rounded-t-3xl w-5/6 "
+            className="items-center flex flex-col justify-center bg-opacity-90 bg-dark-blue p-3 border border-bright-orange mb-5 rounded-3xl w-5/6 "
           >
             <div
               id="cancel/submit-buttons"
               className="w-full flex flex-row justify-evenly py-6"
             >
-              <Link
-                href="/de"
-                className="relative w-60 flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-gray-600 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bright-orange"
-              >
-                Cancel
+              <Link href="/">
+                <button className="relative w-60 flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-gray-600 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bright-orange">
+                  Cancel
+                </button>
               </Link>
               <button
                 type="submit"

@@ -91,7 +91,7 @@ function GrundRezepte() {
 
   return (
     <div className="flex flex-col bg-dark-blue overflow-hidden">
-      <div className=" bg-cover bg-center h-96 items-center justify-center flex flex-col">
+      <div className="bg-[url('/media/Hero_Image.jpg')] bg-cover bg-center h-96 items-center justify-center flex flex-col">
         <div id="description" className="flex h-40 lg:h-32 w-screen pt-2">
           <div className="flex w-full h-full justify-center items-center">
             <div className="flex h-full w-full lg:w-full"></div>
@@ -165,7 +165,7 @@ function GrundRezepte() {
               <XCircleIcon className="h-12 hover:h-11"></XCircleIcon>
             </button>
           </div>
-          <div className="w-full flex flex-row md:mr-12 lg:mr-28  bg-cover h-auto  pb-20">
+          <div className="w-full flex flex-row md:mr-12 lg:mr-28 bg-[url('/media/cuttingBoardBackground.jpg')] bg-cover h-auto  pb-20">
             <div className="w-1/6 h-auto bg-white bg-opacity-80 text-black text-lg font-medium p-4">
               <div
                 id="kategorien"
