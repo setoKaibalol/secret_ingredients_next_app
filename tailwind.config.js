@@ -26,19 +26,6 @@ module.exports = {
         "slime-green": "#324903",
       },
     },
-    fontFamily: {
-      Poppins: ["Poppins, sans-serif"],
-      Azonix: ["Azonix", "cursive"],
-    },
-    container: {
-      center: true,
-      padding: "1rem",
-      screens: {
-        lg: "1124px",
-        xl: "1124px",
-        "2xl": "1124px",
-      },
-    },
   },
   plugins: [],
 }
