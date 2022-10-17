@@ -278,11 +278,9 @@ export default function Header() {
                       </button>
                     </div>
                     <div className="hidden lg:flex items-center justify-end md:mr-6">
-                      <Link href="/de/auth/konto-erstellen">
-                        <button className="whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-bright-orange hover:bg-orange-400">
-                          konto erstellen
-                        </button>
-                      </Link>
+                      <button className="whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-bright-orange hover:bg-orange-400">
+                        konto erstellen
+                      </button>
                     </div>
 
                     <div className="group lg:hidden inline-block p-2">
