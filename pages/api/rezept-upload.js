@@ -33,8 +33,8 @@ export default async function handler(req, res) {
     recipe.portionen &&
     recipe.schwierigkeitsgrad &&
     recipe.steps &&
-    recipe.recipeType /* &&
-      recipe.image */
+    recipe.recipeType &&
+    recipe.image
   ) {
     const updateRecipeTable = new Promise((resolve, reject) => {
       db.query(

@@ -16,33 +16,6 @@ import { useSession } from "next-auth/react"
 function Baukasten() {
   const { data: session } = useSession()
 
-  useEffect(() => {
-    const getTagData = async () => {
-      await axios
-        .get("https://secret-ingredients.vercel.app/data/get-all-tags")
-        .then((res) => {
-          console.log(res)
-          setTags(res.data)
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    }
-
-    const getRecipeData = async () => {
-      await axios
-        .get("https://secret-ingredients.vercel.app/data/get-all-receipes")
-        .then((res) => {
-          setDisplayRecipes(res.data)
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    }
-    getRecipeData()
-    getTagData()
-  }, [])
-
   const [tags, setTags] = useState()
   const [steps, setSteps] = useState([
     { id: 0, stepNr: 1, text: "", img: "", imgUrl: "" },
@@ -74,6 +47,7 @@ function Baukasten() {
     let object = recipe
     object.zutaten = zutaten
     object.image = recipeImageUrl
+    object.steps = steps
 
     const hostRecipeImage = new Promise((resolve, reject) => {
       let body = new FormData()
@@ -108,7 +82,7 @@ function Baukasten() {
         })
           .then((res) => {
             steps[index].imgUrl = res.data.data.url
-            setSteps(steps)
+            object.steps = steps
           })
           .catch((err) => {
             console.log(err)
@@ -127,7 +101,9 @@ function Baukasten() {
       .then(
         await axios
           .post(
-            "https://secret-ingredients.vercel.app/api/rezept-upload",
+            process.env.NODE_ENV === "production"
+              ? "https://secret-ingredients.vercel.app/api/rezept-upload"
+              : "http://localhost:3000/api/rezept-upload",
             recipe,
             {
               withCredentials: true,
