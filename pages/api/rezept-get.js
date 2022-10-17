@@ -19,7 +19,6 @@ const db = mysql.createPool({
 })
 
 export default async function handler(req, res) {
-  console.log(req.body)
   const queryData = req.body
   let responseData
   if (queryData.column && queryData.index) {

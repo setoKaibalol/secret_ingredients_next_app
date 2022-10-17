@@ -11,15 +11,12 @@ import {
   CloudDownloadIcon,
   CloudUploadIcon,
 } from "@heroicons/react/outline"
-import { toast } from "react-toastify"
 import { useSession } from "next-auth/react"
-import { PR } from "country-flag-icons/react/3x2"
 
 function Baukasten() {
   const { data: session } = useSession()
 
   useEffect(() => {
-    console.log(session)
     const getTagData = async () => {
       await axios
         .get("https://secret-ingredients-api.herokuapp.com/data/get-all-tags")
@@ -167,7 +164,6 @@ function Baukasten() {
 
   const addStep = () => {
     if (steps.length < 21) {
-      console.log(steps)
       let array = [...steps]
       array.push({
         id: array.length,
@@ -205,7 +201,6 @@ function Baukasten() {
   }
 
   const handleChange = (e) => {
-    console.log(e.target.value)
     setRecipe({ ...recipe, [e.target.name]: e.target.value })
   }
 
@@ -309,7 +304,7 @@ function Baukasten() {
             id="rezeptName-input-div"
             className="w-5/6 mb-10 items-center flex flex-row justify-center bg-opacity-90 bg-dark-blue border border-bright-orange rounded-3xl"
           >
-            <div className=" relative w-full flex items-center flex-col justify-center p-4">
+            <div className=" w-full flex items-center flex-col justify-center p-4">
               <label
                 htmlFor="rezeptName-input"
                 className="text-bright-orange font-medium text-3xl mb-4 underline underline-offset-4"
@@ -319,7 +314,7 @@ function Baukasten() {
               <input
                 id="rezeptName-input"
                 required
-                className="bg-white appearance-none rounded-full relative block w-3/6 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
+                className="bg-white appearance-none rounded-full block w-3/6 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
                 placeholder=". . ."
                 value={recipe.name}
                 name="name"
@@ -778,7 +773,6 @@ function Baukasten() {
                         name="myImage"
                         required
                         onChange={(event) => {
-                          console.log(event.target.files[0])
                           setSelectedImage(event.target.files[0])
                         }}
                         id="dropzone-file"

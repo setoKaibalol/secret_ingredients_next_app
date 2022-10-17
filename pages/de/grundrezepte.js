@@ -36,13 +36,11 @@ function GrundRezepte() {
   const massUncheck = () => {
     for (let index = 0; index < 20; index++) {
       let checkbox = document.getElementById(`tag ${index}`)
-      console.log(checkbox)
     }
   }
 
   const handleChange = (e) => {
     setKochzeit(e.target.value)
-    console.log(kochzeit)
   }
 
   const openBySearchBar = () => {

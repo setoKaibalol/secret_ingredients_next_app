@@ -10,7 +10,7 @@ import axios from "axios"
 
 const mysqlPasswordProduction = process.env.MYSQL_PASSWORD_PRODUCTION
 const mysqlUsernameProduction = process.env.MYSQL_USERNAME_PRODUCTION
-
+console.log(process.env.NODE_ENV)
 const db = mysql.createPool({
   port: "3306",
   host: "eu-cdbr-west-03.cleardb.net",
