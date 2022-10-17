@@ -19,7 +19,7 @@ function Baukasten() {
   useEffect(() => {
     const getTagData = async () => {
       await axios
-        .get("https://secret-ingredients-api.herokuapp.com/data/get-all-tags")
+        .get("https://secret-ingredients.vercel.app/data/get-all-tags")
         .then((res) => {
           console.log(res)
           setTags(res.data)
@@ -31,10 +31,9 @@ function Baukasten() {
 
     const getRecipeData = async () => {
       await axios
-        .get("http://localhost:5000/data/get-all-receipes")
+        .get("https://secret-ingredients.vercel.app/data/get-all-receipes")
         .then((res) => {
           setDisplayRecipes(res.data)
-          console.log(displayRecipes)
         })
         .catch((error) => {
           console.log(error)
@@ -127,9 +126,13 @@ function Baukasten() {
       }, console.log("StepImage upload failed"))
       .then(
         await axios
-          .post("http://localhost:3000/api/rezept-upload", recipe, {
-            withCredentials: true,
-          })
+          .post(
+            "https://secret-ingredients.vercel.app/api/rezept-upload",
+            recipe,
+            {
+              withCredentials: true,
+            }
+          )
           .then((response) => {
             console.log("baukasten success: ", response)
             alert("Rezept hinzugefügt!")

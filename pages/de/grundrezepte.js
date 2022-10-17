@@ -21,7 +21,7 @@ function GrundRezepte() {
 
   useEffect(() => {
     axios
-      .post("http://localhost:3000/api/rezept-get", {
+      .post("https://secret-ingredients.vercel.app/api/rezept-get", {
         column: "recipeType",
         index: "Grundrezept",
       })
