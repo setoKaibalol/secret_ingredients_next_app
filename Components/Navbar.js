@@ -112,7 +112,7 @@ export default function Header() {
                       </Link>
                     </div>
                   </div>
-                  <div className="lg:pl-20 sm:block sm:ml-2">
+                  <div className="hidden lg:pl-20 sm:block sm:ml-2">
                     <div className="flex space-x-1 md:space-x-4">
                       {navigation.map((item) =>
                         item.subcategory ? (
