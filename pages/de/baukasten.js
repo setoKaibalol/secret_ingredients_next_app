@@ -57,10 +57,8 @@ function Baukasten() {
           if (response.status === 400) {
             setStatus("unsubmitted")
           }
-          response.json().then((data) => {
-            console.log("baukasten success: ", data)
-            alert("Rezept hinzugefügt!")
-          })
+          console.log("baukasten success: ", response)
+          alert("Rezept hinzugefügt!")
         })
         .catch((error) => {
           console.log("baukasten error: ", error)
