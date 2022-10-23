@@ -4,14 +4,41 @@ import {
   ShareIcon,
   ThumbUpIcon,
   ThumbDownIcon,
+  XIcon,
 } from "@heroicons/react/outline"
+import { useSession } from "next-auth/react"
 
 function RezeptComponent(item, index) {
+  const { data: session } = useSession()
+
+  const deleteRecipe = (itemId) => {
+    fetch("../api/rezept-delete", {
+      method: "post",
+      body: JSON.stringify(itemId),
+    }).then((res) => {
+      location.reload()
+    })
+  }
+
   return (
     <div
       id="rezept-card"
       className="h-[520px] w-5/6 md:w-[350px] flex flex-col shadow-lg shadow-black border-black border items-center rounded-lg group bg-dark-blue bg-opacity-90"
     >
+      {session ? (
+        <div className="w-full flex justify-end">
+          <button
+            onClick={() => {
+              deleteRecipe(item.item.recipeId)
+            }}
+            className="absolute"
+          >
+            <XIcon className="h-10 w-10"></XIcon>
+          </button>
+        </div>
+      ) : (
+        ""
+      )}
       <div
         id="rezept-card-body"
         className="flex justify-center w-full items-center"

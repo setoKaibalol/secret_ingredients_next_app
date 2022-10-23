@@ -5,9 +5,10 @@ import { US, DE } from "country-flag-icons/react/3x2"
 import { useSession, signIn, signOut } from "next-auth/react"
 import Image from "next/image"
 import { useRouter } from "next/router"
+import MoonLoader from "react-spinners/MoonLoader"
 
 export default function Header() {
-  const { data: session } = useSession()
+  const { data: session, status: status } = useSession()
   const router = useRouter()
   const language = "de"
   const navigation = session
@@ -203,7 +204,13 @@ export default function Header() {
                     </div>
                   </div>
                 </div>
-                {session ? (
+                {status === "loading" ? (
+                  <MoonLoader
+                    className="mr-5"
+                    size={40}
+                    color="#FF8038"
+                  ></MoonLoader>
+                ) : session ? (
                   <div className="inset-y-0 right-0 flex items-center pr-2 sm:ml-6 sm:pr-0 sm:mr-4">
                     <button
                       type="button"
@@ -257,7 +264,7 @@ export default function Header() {
                             <button
                               className="block px-6 py-2 text-sm font-medium rounded-lg hover:bg-gray-300 dark:hover:bg-dark-blue border border-transparent w-full"
                               onClick={() => {
-                                signOut()
+                                signOut({ callbackUrl: "/" })
                               }}
                             >
                               Sign out
@@ -310,6 +317,7 @@ export default function Header() {
                     </div>
                   </div>
                 )}
+
                 <div className="flex space-x-4 pl-6 xl:pl-0">
                   <div className="group inline-block relative py-2">
                     <div className="flex bg-gray-700 rounded-2xl w-9 h-9 justify-center cursor-pointer">

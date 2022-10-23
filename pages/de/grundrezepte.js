@@ -20,13 +20,15 @@ function GrundRezepte() {
   const [dbRecipes, setDbRecipes] = useState([])
 
   useEffect(() => {
-    axios
-      .post("https://secret-ingredients.vercel.app/api/rezept-get", {
-        column: "recipeType",
-        index: "Grundrezept",
-      })
+    let data = { column: "recipeType", index: "Grundrezept" }
+    fetch("/api/rezept-get", {
+      method: "post",
+      body: JSON.stringify(data),
+    })
       .then((res) => {
-        setDbRecipes(res.data)
+        res.json().then((data) => {
+          setDbRecipes(data)
+        })
       })
       .catch((err) => {
         console.log(err)
@@ -163,7 +165,7 @@ function GrundRezepte() {
               <XCircleIcon className="h-12 hover:h-11"></XCircleIcon>
             </button>
           </div>
-          <div className="w-full flex flex-row md:mr-12 lg:mr-28 bg-[url('/media/cuttingBoardBackground.jpg')] bg-cover h-auto  pb-20">
+          <div className="w-full flex flex-row md:mr-12 lg:mr-28 bg-[url('/media/cuttingBoardBackground.jpg')] bg-cover h-auto min-h-screen pb-20">
             <div className="w-1/6 h-auto bg-white bg-opacity-80 text-black text-lg font-medium p-4">
               <div
                 id="kategorien"

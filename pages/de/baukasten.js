@@ -12,10 +12,12 @@ import {
   CloudUploadIcon,
 } from "@heroicons/react/outline"
 import { useSession } from "next-auth/react"
+import MoonLoader from "react-spinners/MoonLoader"
 
 function Baukasten() {
   const { data: session } = useSession()
-
+  const [status, setStatus] = useState("unsubmitted")
+  const [imgUploaded, setImgUploaded] = useState(false)
   const [tags, setTags] = useState()
   const [steps, setSteps] = useState([
     { id: 0, stepNr: 1, text: "", img: "", imgUrl: "" },
@@ -41,82 +43,93 @@ function Baukasten() {
   const [recipeImageUrl, setRecipeImageUrl] = useState(null)
   const [displayRecipes, setDisplayRecipes] = useState([])
 
+  useEffect(() => {
+    if (status === "unsubmitted" || status === "loading") {
+      fetch("/api/rezept-upload", {
+        method: "post",
+        body: JSON.stringify(recipe),
+        credentials: "include",
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            setStatus("submitted")
+          }
+          if (response.status === 400) {
+            setStatus("unsubmitted")
+          }
+          response.json().then((data) => {
+            console.log("baukasten success: ", data)
+            alert("Rezept hinzugefügt!")
+          })
+        })
+        .catch((error) => {
+          console.log("baukasten error: ", error)
+        })
+    }
+  }, [imgUploaded])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log("submitting...")
     let object = recipe
     object.zutaten = zutaten
-    object.image = recipeImageUrl
     object.steps = steps
+    setStatus("loading")
 
-    const hostRecipeImage = new Promise((resolve, reject) => {
-      let body = new FormData()
-      body.set("key", "6fac261951b6c63ff9999b1a5cd53a73")
-      body.append("image", selectedImage)
-      axios({
-        method: "post",
-        url: `https://api.imgbb.com/1/upload`,
-        data: body,
-      })
-        .then((res) => {
-          console.log(res.data)
-          setRecipeImageUrl(res.data.data.url)
-          resolve()
-        })
-        .catch((err) => {
-          console.log(err)
-          reject()
-        })
-    })
-
-    const hostStepImages = new Promise(async (resolve, reject) => {
-      let body = new FormData()
-      body.set("key", "6fac261951b6c63ff9999b1a5cd53a73")
-
-      for (let index = 0; index < steps.length; index++) {
-        body.append("image", steps[index].img)
-        await axios({
+    const hostRecipeImage = () => {
+      return new Promise((resolve, reject) => {
+        let body = new FormData()
+        body.set("key", "6fac261951b6c63ff9999b1a5cd53a73")
+        body.append("image", selectedImage)
+        axios({
           method: "post",
           url: `https://api.imgbb.com/1/upload`,
           data: body,
         })
           .then((res) => {
-            steps[index].imgUrl = res.data.data.url
-            object.steps = steps
+            console.log(res.data.data.url)
+            object.image = res.data.data.url
+            resolve()
           })
           .catch((err) => {
-            console.log(err)
+            setStatus("unsubmitted")
+            reject()
           })
-      }
-    })
-    await hostRecipeImage
-      .then(async () => {
-        await hostStepImages
+      })
+    }
+
+    const hostStepImages = () => {
+      return new Promise((resolve, reject) => {
+        let body = new FormData()
+        body.set("key", "6fac261951b6c63ff9999b1a5cd53a73")
+
+        for (let index = 0; index < steps.length; index++) {
+          body.append("image", steps[index].img)
+          axios({
+            method: "post",
+            url: `https://api.imgbb.com/1/upload`,
+            data: body,
+          })
+            .then((res) => {
+              steps[index].imgUrl = res.data.data.url
+              object.steps = steps
+              resolve()
+            })
+            .catch((err) => {
+              console.log(err)
+              resolve()
+            })
+        }
+      })
+    }
+    await hostRecipeImage()
+      .then(() => {
+        hostStepImages()
       })
       .then(() => {
-        object.steps = steps
+        console.log(object)
         setRecipe(object)
-        console.log("StepImage upload sucessfull")
-      }, console.log("StepImage upload failed"))
-      .then(
-        await axios
-          .post(
-            process.env.NODE_ENV === "production"
-              ? "https://secret-ingredients.vercel.app/api/rezept-upload"
-              : "http://localhost:3000/api/rezept-upload",
-            recipe,
-            {
-              withCredentials: true,
-            }
-          )
-          .then((response) => {
-            console.log("baukasten success: ", response)
-            alert("Rezept hinzugefügt!")
-          })
-          .catch((error) => {
-            console.log("baukasten error: ", error)
-          })
-      )
+        setImgUploaded(true)
+      })
   }
 
   const addZutat = () => {
@@ -300,7 +313,7 @@ function Baukasten() {
                 onChange={handleChange}
               ></input>
             </div>
-            <div className="absolute w-[50%] flex flex-col">
+            <div className="m-4 flex flex-col">
               <div className="w-full flex flex-col items-end">
                 <div className="flex flex-col">
                   <label
@@ -767,6 +780,22 @@ function Baukasten() {
             id="rezeptName-input-div"
             className="items-center flex flex-col justify-center bg-opacity-90 bg-dark-blue p-3 border border-bright-orange mb-5 rounded-3xl w-5/6 "
           >
+            {status === "unsubmitted" ? (
+              ""
+            ) : status === "loading" ? (
+              ""
+            ) : status === "submitted" ? (
+              <div
+                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                role="alert"
+              >
+                <span class="font-medium">Glückwunsch!</span> Dein Rezept wurde
+                hochgeladen.
+              </div>
+            ) : (
+              ""
+            )}
+
             <div
               id="cancel/submit-buttons"
               className="w-full flex flex-row justify-evenly py-6"
@@ -777,13 +806,22 @@ function Baukasten() {
                 </button>
               </Link>
               <button
+                disabled={status === "submitted" ? true : false}
                 type="submit"
                 onClick={(e) => {
                   handleSubmit(e)
                 }}
-                className="relative w-60 flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-bright-orange hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bright-orange"
+                className="relative disabled:gray-400 cursor-pointer w-60 flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-bright-orange hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bright-orange"
               >
-                Submit
+                {status === "unsubmitted" ? (
+                  "Submit"
+                ) : status === "loading" ? (
+                  <MoonLoader color="#033249" size={19}></MoonLoader>
+                ) : status === "submitted" ? (
+                  "submitted"
+                ) : (
+                  ""
+                )}
               </button>
             </div>
           </div>

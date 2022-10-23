@@ -6,7 +6,7 @@ import tagData from "../../data/tagData"
 import recipeData from "../../data/recipeData"
 import axios from "axios"
 
-function Geheimrezepte() {
+function GeheimRezepte() {
   const tags = tagData
   const recipes = recipeData
   const searchBar = useRef(null)
@@ -20,14 +20,15 @@ function Geheimrezepte() {
   const [dbRecipes, setDbRecipes] = useState([])
 
   useEffect(() => {
-    axios
-      .post("https://secret-ingredients.vercel.app/api/rezept-get", {
-        column: "recipeType",
-        index: "Geheimrezept",
-      })
+    let data = { column: "recipeType", index: "Geheimrezept" }
+    fetch("/api/rezept-get", {
+      method: "post",
+      body: JSON.stringify(data),
+    })
       .then((res) => {
-        console.log(res)
-        setDbRecipes(res.data)
+        res.json().then((data) => {
+          setDbRecipes(data)
+        })
       })
       .catch((err) => {
         console.log(err)
@@ -90,7 +91,7 @@ function Geheimrezepte() {
 
   return (
     <div className="flex flex-col bg-dark-blue overflow-hidden">
-      <div className=" bg-cover bg-center h-96 items-center justify-center flex flex-col">
+      <div className="bg-[url('/media/Hero_Image.jpg')] bg-cover bg-center h-96 items-center justify-center flex flex-col">
         <div id="description" className="flex h-40 lg:h-32 w-screen pt-2">
           <div className="flex w-full h-full justify-center items-center">
             <div className="flex h-full w-full lg:w-full"></div>
@@ -153,7 +154,7 @@ function Geheimrezepte() {
             <div className="w-full flex flex-col">
               <div className="w-full text-center">
                 <p className="px-10 font-medium text-2xl text-sand-white pb-4">
-                  Einfache unveränderte Geheimrezepte
+                  Einfache unveränderte GeheimRezepte
                 </p>
               </div>
             </div>
@@ -164,7 +165,7 @@ function Geheimrezepte() {
               <XCircleIcon className="h-12 hover:h-11"></XCircleIcon>
             </button>
           </div>
-          <div className="w-full flex flex-row md:mr-12 lg:mr-28  bg-cover h-auto  pb-20">
+          <div className="w-full flex flex-row md:mr-12 lg:mr-28 bg-[url('/media/cuttingBoardBackground.jpg')] bg-cover h-auto min-h-screen pb-20">
             <div className="w-1/6 h-auto bg-white bg-opacity-80 text-black text-lg font-medium p-4">
               <div
                 id="kategorien"
@@ -292,4 +293,4 @@ function Geheimrezepte() {
   )
 }
 
-export default Geheimrezepte
+export default GeheimRezepte

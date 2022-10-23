@@ -11,7 +11,7 @@ function login({ providers, csrfToken }) {
     <div className="flex bg-dark-blue w-full items-center justify-center h-[90vh]">
       <form></form>
       <div className="w-1/4 border-2 rounded-2xl bg-dark-blue--1 border-bright-orange h-[80%] flex flex-col items-center p-4">
-        <h2 className="mb-10 text-2xl font-medium">Log dich ein:</h2>
+        <h2 className="mb-10 text-2xl text-white font-medium">Log dich ein:</h2>
         <div
           id="provider-div"
           className="flex flex-row justify-center w-full flex-wrap px-10 space-x-6 gap-y-10"
@@ -25,7 +25,7 @@ function login({ providers, csrfToken }) {
                 <div key={index}>
                   <button
                     className="h-20 w-20 hover:bg-gray-300 rounded-3xl bg-sand-white border-bright-orange border-2 p-2"
-                    onClick={() => signIn(provider.id)}
+                    onClick={() => signIn(provider.id, { callbackUrl: "/" })}
                   >
                     <FcGoogle className="h-full w-full" />
                   </button>
@@ -37,7 +37,7 @@ function login({ providers, csrfToken }) {
                 <div key={index}>
                   <button
                     className="h-20 w-20 hover:bg-gray-400 rounded-3xl bg-sand-white border-bright-orange border-2 p-2"
-                    onClick={() => signIn(provider.id)}
+                    onClick={() => signIn(provider.id, { callbackUrl: "/" })}
                   >
                     <SiFacebook className="h-full w-full text-blue-700" />
                   </button>
@@ -49,7 +49,7 @@ function login({ providers, csrfToken }) {
                 <div key={index}>
                   <button
                     className="h-20 w-20 hover:bg-gray-400 rounded-3xl bg-sand-white border-bright-orange border-2 p-2"
-                    onClick={() => signIn(provider.id)}
+                    onClick={() => signIn(provider.id, { callbackUrl: "/" })}
                   >
                     <DiApple className="h-full w-full text-black" />
                   </button>
@@ -61,7 +61,7 @@ function login({ providers, csrfToken }) {
                 <div key={index}>
                   <button
                     className="h-20 w-20 hover:bg-gray-400 rounded-3xl bg-sand-white border-bright-orange border-2 p-2"
-                    onClick={() => signIn(provider.id)}
+                    onClick={() => signIn(provider.id, { callbackUrl: "/" })}
                   >
                     <FaTwitter className="h-full w-full text-blue-600" />
                   </button>
@@ -73,7 +73,7 @@ function login({ providers, csrfToken }) {
                 <div key={index}>
                   <button
                     className="h-20 w-20 hover:bg-gray-400 rounded-3xl bg-sand-white border-bright-orange border-2 p-2"
-                    onClick={() => signIn(provider.id)}
+                    onClick={() => signIn(provider.id, { callbackUrl: "/" })}
                   >
                     <FaInstagram className="h-full w-full text-purple-600" />
                   </button>

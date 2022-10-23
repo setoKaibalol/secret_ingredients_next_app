@@ -10,7 +10,7 @@ import axios from "axios"
 
 const mysqlPasswordProduction = process.env.MYSQL_PASSWORD_PRODUCTION
 const mysqlUsernameProduction = process.env.MYSQL_USERNAME_PRODUCTION
-console.log(process.env.NODE_ENV)
+console.log(process.env.develop)
 const db = mysql.createPool({
   port: "3306",
   host: "eu-cdbr-west-03.cleardb.net",
@@ -80,6 +80,13 @@ export const authOptions = {
         session.id = token.id
       }
       return session
+    },
+    async signIn({ account, profile }) {
+      if (account.provider === "google") {
+        console.log(profile.email)
+        return profile.email_verified && profile.email.endsWith("@gmail.com")
+      }
+      return true // Do different verification for other providers that don't have `email_verified`
     },
   },
   secret: process.env.NEXTAUTH_SECRET,

@@ -1,7 +1,7 @@
 const mysql = require("mysql2")
 
-const mysqlPasswordProduction = process.env.MYSQL_PASSWORD_PRODUCTION
-const mysqlUsernameProduction = process.env.MYSQL_USERNAME_PRODUCTION
+const mysqlPasswordProduction = process.env.MYSQL_PASSWORD
+const mysqlUsernameProduction = process.env.MYSQL_USERNAME
 
 /* const db = mysql.createPool({
   host: "localhost",
@@ -16,21 +16,20 @@ const db = mysql.createPool({
   user: mysqlUsernameProduction,
   password: mysqlPasswordProduction,
   database: "heroku_627d1cf77eefb59",
+  connectionLimit: 100,
 })
 
 export default async function handler(req, res) {
-  const queryData = req.body
+  const queryData = JSON.parse(req.body)
   let responseData
   if (queryData.column && queryData.index) {
-    const queryRecipes = new Promise((resolve, reject) => {
-      db.getConnection((err, connection) => {
+    const queryRecipes = () => {
+      return new Promise((resolve, reject) => {
         db.query(
           `SELECT * FROM recipes WHERE ${queryData.column} = "${queryData.index}";`,
           (error, result) => {
-            connection.release()
             if (error) {
-              res.status(400)
-              res.send("error")
+              res.status(400).send("error")
               resolve()
             } else {
               responseData = result
@@ -39,11 +38,12 @@ export default async function handler(req, res) {
           }
         )
       })
-    })
+    }
 
-    await queryRecipes.then(() => res.status(200).send(responseData))
+    await queryRecipes().then(() => {
+      res.status(200).json(responseData)
+    })
   } else {
-    res.status(400)
-    res.send("Input error")
+    res.status(400).send("Input error")
   }
 }
