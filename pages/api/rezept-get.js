@@ -13,10 +13,9 @@ export default async function handler(req, res) {
       })
       .catch((err) => {
         console.log(err)
-        res.status(400).send("failed")
+        res.status(500).send("failed")
       })
-  }
-  if (req.body.call === "list-geheimrezepte") {
+  } else if (req.body.call === "list-geheimrezepte") {
     await prisma.rezept
       .findMany({
         where: {
@@ -24,11 +23,11 @@ export default async function handler(req, res) {
         },
       })
       .then((result) => {
-        res.status(200).send(result)
+        res.status(200).send(result).end()
       })
       .catch((err) => {
         console.log(err)
-        res.status(400).send("failed")
+        res.status(500).send("failed")
       })
   } else {
     res.setHeader("Allow", "POST")

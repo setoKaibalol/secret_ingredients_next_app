@@ -11,10 +11,8 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
     <>
       <SessionProvider session={session}>
-        <AppContext.Provider>
-          <Navbar />
-          <Component {...pageProps} />
-        </AppContext.Provider>
+        <Navbar />
+        <Component {...pageProps} />
       </SessionProvider>
     </>
   )

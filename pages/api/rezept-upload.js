@@ -26,8 +26,7 @@ export default async function handler(req, res) {
         console.log(err)
         res.status(400).send("failed")
       })
-  }
-  if (req.body.call === "zutaten-upload") {
+  } else if (req.body.call === "zutaten-upload") {
     console.log(req.body.data)
 
     await prisma.rezeptZutat
@@ -41,8 +40,7 @@ export default async function handler(req, res) {
         console.log(err)
         res.status(400).send("failed")
       })
-  }
-  if (req.body.call === "steps-upload") {
+  } else if (req.body.call === "steps-upload") {
     console.log(req.body.data)
 
     await prisma.rezeptStep
