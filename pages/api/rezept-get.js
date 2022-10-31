@@ -23,7 +23,7 @@ export default async function handler(req, res) {
         },
       })
       .then((result) => {
-        res.status(200).send(result).end()
+        res.status(200).send(result)
       })
       .catch((err) => {
         console.log(err)
