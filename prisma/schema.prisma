@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id               String            @id @default(cuid())
+  name             String?
+  email            String?           @unique
+  emailVerified    DateTime?
+  role             Role              @default(BASIC)
+  image            String?
+  accounts         Account[]
+  sessions         Session[]
+  recipes          rezept[]
+  rezeptKommentare rezeptKommentar[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model rezept {
+  id                 Int               @id @default(autoincrement())
+  author             User              @relation(fields: [userId], references: [id])
+  userId             String
+  zutaten            rezeptZutat[]
+  steps              rezeptStep[]
+  name               String
+  zubereitungszeit   String
+  portionen          Int
+  schwierigkeitsgrad String
+  utensilien         String?
+  quellen            String?
+  aufrufe            Int               @default(0)
+  likes              Int               @default(0)
+  dislikes           Int               @default(0)
+  kommentare         rezeptKommentar[]
+  image              String
+  typ                String
+}
+
+model rezeptZutat {
+  id        Int     @id @default(autoincrement())
+  recipe    rezept  @relation(fields: [recipeId], references: [id])
+  recipeId  Int
+  name      String
+  menge     Float
+  einheit   String
+  kommentar String?
+}
+
+model rezeptStep {
+  id       Int     @id @default(autoincrement())
+  recipe   rezept  @relation(fields: [recipeId], references: [id])
+  recipeId Int
+  nummer   Int
+  text     String
+  image    String?
+}
+
+model rezeptKommentar {
+  id       Int    @id @default(autoincrement())
+  author   User   @relation(fields: [userId], references: [id])
+  userId   String
+  text     String
+  rezept   rezept @relation(fields: [rezeptId], references: [id])
+  rezeptId Int
+}
+
+enum Role {
+  BASIC
+  ADMIN
+}

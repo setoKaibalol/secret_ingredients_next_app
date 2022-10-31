@@ -1,72 +1,23 @@
-const mysql = require("mysql2")
-
-const mysqlPasswordProduction = process.env.MYSQL_PASSWORD
-const mysqlUsernameProduction = process.env.MYSQL_USERNAME
-
-const db = mysql.createPool({
-  port: "3306",
-  host: "eu-cdbr-west-03.cleardb.net",
-  user: mysqlUsernameProduction,
-  password: mysqlPasswordProduction,
-  database: "heroku_627d1cf77eefb59",
-  connectionLimit: 100,
-})
+import prisma from "../../prisma/PrismaClient"
 
 export default async function handler(req, res) {
-  const recipeId = JSON.parse(req.body)
-  if (recipeId) {
-    const deleteRecipeSteps = () => {
-      return new Promise((resolve, reject) => {
-        db.query(
-          `DELETE FROM recipesteps WHERE recipeId = ${recipeId};`,
-          (error, result) => {
-            if (error) {
-              res.status(400).send("error")
-              resolve()
-            } else {
-              resolve()
-            }
-          }
-        )
+  console.log(req.body)
+  if (req.body.call === "delete-recipe") {
+    await prisma.rezept
+      .delete({
+        where: {
+          id: req.body.data.recipeId,
+        },
       })
-    }
-    const deleteRecipeZutaten = () => {
-      return new Promise((resolve, reject) => {
-        db.query(
-          `DELETE FROM recipezutaten WHERE recipeId = ${recipeId}`,
-          (error, result) => {
-            if (error) {
-              res.status(400).send("error")
-              resolve()
-            } else {
-              resolve()
-            }
-          }
-        )
+      .then((result) => {
+        res.status(200).send(result)
       })
-    }
-    const deleteRecipes = () => {
-      return new Promise((resolve, reject) => {
-        db.query(
-          `DELETE FROM recipes WHERE recipeId = ${recipeId};
-            `,
-          (error, result) => {
-            if (error) {
-              res.status(400).send("error")
-              resolve()
-            } else {
-              resolve()
-            }
-          }
-        )
+      .catch((err) => {
+        console.log(err)
+        res.status(400).send("failed")
       })
-    }
-    Promise.all([deleteRecipeSteps(), deleteRecipeZutaten()]).then(() => {
-      deleteRecipes().then(() => {
-        res.status(200).send()
-      })
-    })
   } else {
-    res.status(400).send("Input error")
+    res.setHeader("Allow", "POST")
+    res.status(405).end("Method Not Allowed")
   }
 }

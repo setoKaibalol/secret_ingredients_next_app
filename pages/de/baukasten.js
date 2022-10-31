@@ -16,61 +16,127 @@ import MoonLoader from "react-spinners/MoonLoader"
 
 function Baukasten() {
   const { data: session } = useSession()
+  const [userId, setUserId] = useState()
+
   const [status, setStatus] = useState("unsubmitted")
   const [imgUploaded, setImgUploaded] = useState(false)
-  const [tags, setTags] = useState()
+
   const [steps, setSteps] = useState([
-    { id: 0, stepNr: 1, text: "", img: "", imgUrl: "" },
+    { recipeId: "", nummer: 1, text: "", image: "", imageRaw: "" },
   ])
+
   const [zutaten, setZutaten] = useState([
-    { id: 0, zutat: "", menge: "", einheit: "", kommentar: "" },
+    { recipeId: "", name: "", menge: "", einheit: "", kommentar: "" },
   ])
+
   const [recipe, setRecipe] = useState({
+    userId: userId,
     name: "",
     zutaten: "",
-    recipeType: "Grundrezept",
+    typ: "Grundrezept",
     likes: 0,
     zubereitungszeit: "",
-    portionen: "",
+    portionen: 1,
     schwierigkeitsgrad: "Einfach",
-    wichtigeUtensilien: "",
+    utensilien: "",
     quellen: "",
     steps: "",
     image: "",
   })
 
+  const [recipeId, setRecipeId] = useState()
+
   const [selectedImage, setSelectedImage] = useState(null)
-  const [recipeImageUrl, setRecipeImageUrl] = useState(null)
   const [displayRecipes, setDisplayRecipes] = useState([])
 
   useEffect(() => {
-    if (status === "unsubmitted" || status === "loading") {
+    if (session) {
+      fetch("/api/user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          call: "get-user",
+          data: { email: session.user.email },
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setUserId(data.id)
+          setRecipe({ ...recipe, userId: data.id })
+        })
+        .catch((err) => {
+          alert(err)
+        })
+    }
+  }, [session])
+
+  useEffect(() => {
+    if (status === "loading") {
       fetch("/api/rezept-upload", {
         method: "post",
-        body: JSON.stringify(recipe),
-        credentials: "include",
+        body: JSON.stringify({ call: "rezept-upload", data: recipe }),
+        headers: { "Content-Type": "application/json" },
       })
-        .then((response) => {
-          if (response.status === 200) {
-            setStatus("submitted")
-          }
-          if (response.status === 400) {
-            setStatus("unsubmitted")
-          }
-          console.log("baukasten success: ", response)
-          alert("Rezept hinzugefügt!")
+        .then((res) => res.json())
+        .then((data) => {
+          setRecipeId(data.id)
         })
         .catch((error) => {
+          setStatus("unsubmitted")
+          alert("rezept nicht hochgeladen.")
           console.log("baukasten error: ", error)
         })
     }
   }, [imgUploaded])
 
+  useEffect(() => {
+    if (recipeId) {
+      let stepsObject = steps
+      stepsObject.forEach((step) => (step.recipeId = recipeId))
+      stepsObject.forEach((step) => delete step.imageRaw)
+      setSteps(stepsObject)
+
+      let zutatenObject = zutaten
+      zutatenObject.forEach((zutat) => (zutat.recipeId = recipeId))
+      zutatenObject.forEach((zutat) => (zutat.menge = parseFloat(zutat.menge)))
+      setZutaten(zutatenObject)
+
+      fetch("/api/rezept-upload", {
+        method: "post",
+        body: JSON.stringify({ call: "zutaten-upload", data: zutaten }),
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setRecipeId(data.id)
+          setStatus("submitted")
+          alert("Rezept hinzugefügt!")
+        })
+        .catch((error) => {
+          setStatus("zutaten unsubmitted")
+          alert("zutaten nicht hochgeladen.")
+        })
+
+      fetch("/api/rezept-upload", {
+        method: "post",
+        body: JSON.stringify({ call: "steps-upload", data: steps }),
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setRecipeId(data.id)
+        })
+        .catch((error) => {
+          setStatus("steps unsubmitted")
+          alert("steps nicht hochgeladen.")
+        })
+    }
+  }, [recipeId])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     let object = recipe
-    object.zutaten = zutaten
-    object.steps = steps
+    object.portionen = parseInt(object.portionen)
     setStatus("loading")
 
     const hostRecipeImage = () => {
@@ -97,26 +163,33 @@ function Baukasten() {
 
     const hostStepImages = () => {
       return new Promise((resolve, reject) => {
+        var fetches = []
         let body = new FormData()
         body.set("key", "6fac261951b6c63ff9999b1a5cd53a73")
 
         for (let index = 0; index < steps.length; index++) {
-          body.append("image", steps[index].img)
-          axios({
-            method: "post",
-            url: `https://api.imgbb.com/1/upload`,
-            data: body,
-          })
-            .then((res) => {
-              steps[index].imgUrl = res.data.data.url
-              object.steps = steps
-              resolve()
-            })
-            .catch((err) => {
-              console.log(err)
-              resolve()
-            })
+          if (steps[index].imageRaw) {
+            body.append("image", steps[index].imageRaw)
+
+            fetches.push(
+              axios({
+                method: "post",
+                url: `https://api.imgbb.com/1/upload`,
+                data: body,
+              })
+                .then((res) => {
+                  steps[index].image = res.data.data.url
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            )
+          }
         }
+        console.log("187:steps ", steps)
+        Promise.all(fetches).then(() => {
+          resolve
+        })
       })
     }
     await hostRecipeImage()
@@ -134,9 +207,9 @@ function Baukasten() {
     if (zutaten.length < 21) {
       let array = [...zutaten]
       array.push({
-        id: array.length,
-        zutat: "",
-        menge: 0,
+        recipeId: recipeId,
+        name: "",
+        menge: "",
         einheit: "",
         kommentar: "",
       })
@@ -156,10 +229,9 @@ function Baukasten() {
     if (steps.length < 21) {
       let array = [...steps]
       array.push({
-        id: array.length,
-        stepNr: steps.length + 1,
+        nummer: steps.length + 1,
         text: "",
-        img: "",
+        image: "",
       })
       setSteps(array)
     }
@@ -171,22 +243,18 @@ function Baukasten() {
       array.pop()
       setSteps(array)
     }
-
-    if (steps[steps.length - 1].stepImage) {
-      steps[steps.length - 1].stepImage = ""
-    }
   }
 
-  const addStepImage = (event, stepIndex) => {
-    let image = event.target.files[0]
+  const addStepImage = (e, index) => {
+    let image = e.target.files[0]
     let array = [...steps]
-    array[array.indexOf(stepIndex)].img = image
+    array[index].imageRaw = image
     setSteps(array)
   }
 
-  const removeStepImage = (step) => {
+  const removeStepImage = (step, index) => {
     let array = [...steps]
-    array[step.id].img = ""
+    array[index].imageRaw = ""
     setSteps(array)
   }
 
@@ -199,52 +267,52 @@ function Baukasten() {
       let input = e.target.value
       let array = [...steps]
 
-      array[step.id].text = input
+      array[step.nummer - 1].text = input
 
       setSteps(array)
     } else if (e.target.name === "image") {
       let input = e.target.value
       let array = [...steps]
 
-      array[step.id].img = input
+      array[step.nummer - 1].imageRaw = input
 
       setSteps(array)
     }
   }
 
-  const handleChangeZutaten = (e, zutat) => {
+  const handleChangeZutaten = (e, zutat, index) => {
     if (e.target.name === "zutat") {
       let input = e.target.value
       let array = [...zutaten]
 
-      array[zutat.id].zutat = input
+      array[index].name = input
 
       setZutaten(array)
     } else if (e.target.name === "menge") {
       let input = e.target.value
       let array = [...zutaten]
 
-      array[zutat.id].menge = input
+      array[index].menge = input
 
       setZutaten(array)
     } else if (e.target.name === "einheit") {
       let input = e.target.value
       let array = [...zutaten]
 
-      array[zutat.id].einheit = input
+      array[index].einheit = input
 
       setZutaten(array)
     } else if (e.target.name === "kommentar") {
       let input = e.target.value
       let array = [...zutaten]
 
-      array[zutat.id].kommentar = input
+      array[index].kommentar = input
 
       setZutaten(array)
     }
   }
 
-  const getChosenTags = (mode) => {
+  /*   const getChosenTags = (mode) => {
     // 1 = nur chosen Zutat Tags
     // 2 = nur chosen Sonstige Tags
     // 3 = alle chosen Tags
@@ -280,7 +348,7 @@ function Baukasten() {
       })
     }
   }
-
+ */
   return (
     <div className="flex bg-[url('/media/cuttingBoardBackground.jpg')] bg-contain">
       <div className="absolute text-black">
@@ -324,8 +392,8 @@ function Baukasten() {
                     required
                     className="text-black bg-white rounded-full focus:outline-none px-4 py-2 focus:ring-bright-orange focus:border-bright-orange"
                     id="recipe-type-select"
-                    name="recipeType"
-                    value={recipe.recipeType}
+                    name="typ"
+                    value={recipe.typ}
                     onChange={(e) => handleChange(e)}
                   >
                     <option>Grundrezept</option>
@@ -382,9 +450,11 @@ function Baukasten() {
                             required
                             type={"text"}
                             name="zutat"
-                            value={zutat.zutat}
-                            placeholder={`${zutat.id + 1}. Zutat...`}
-                            onChange={(e) => handleChangeZutaten(e, zutat)}
+                            value={zutat.name}
+                            placeholder={`${index + 1}. Zutat...`}
+                            onChange={(e) =>
+                              handleChangeZutaten(e, zutat, index)
+                            }
                           ></input>
                         </div>
                       </div>
@@ -400,7 +470,9 @@ function Baukasten() {
                             name="menge"
                             value={zutat.menge}
                             type={"number"}
-                            onChange={(e) => handleChangeZutaten(e, zutat)}
+                            onChange={(e) =>
+                              handleChangeZutaten(e, zutat, index)
+                            }
                             placeholder="..."
                           ></input>
                         </div>
@@ -416,7 +488,9 @@ function Baukasten() {
                             name="einheit"
                             value={zutat.einheit}
                             type={"text"}
-                            onChange={(e) => handleChangeZutaten(e, zutat)}
+                            onChange={(e) =>
+                              handleChangeZutaten(e, zutat, index)
+                            }
                             placeholder="Einheit..."
                           ></input>
                         </div>
@@ -431,7 +505,7 @@ function Baukasten() {
                           id="zutat-input"
                           name="kommentar"
                           value={zutat.kommentar}
-                          onChange={(e) => handleChangeZutaten(e, zutat)}
+                          onChange={(e) => handleChangeZutaten(e, zutat, index)}
                           type={"text"}
                           placeholder="Kommentar..."
                         ></input>
@@ -468,49 +542,28 @@ function Baukasten() {
           >
             <div className="w-full flex flex-col items-center justify-center py-2 space-y-10">
               <div className="flex flex-row w-full justify-between">
-                <div className="flex flex-row w-1/3 justify-center items-center space-x-2">
+                <div className="flex flex-col w-1/3 justify-center items-center space-x-2">
                   <label
                     htmlFor="zubereitungszeit"
                     className="text-white text-lg pl-4"
                   >
                     Ungefähre Zubereitungszeit:
                   </label>
-                  <div className="flex-row flex items-center p-1">
-                    <input
-                      required
-                      className="bg-white rounded-full h-10 relative block w-24 pl-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10 "
-                      id="zubereitungszeit"
-                      name="zubereitungszeit"
-                      type={"time"}
-                      value={recipe.zubereitungszeit}
-                      onChange={(e) => handleChange(e)}
-                    ></input>
-                  </div>
+                  <select
+                    required
+                    className="text-gray-900 bg-white rounded-full focus:outline-none px-4 py-2 focus:ring-bright-orange focus:border-bright-orange focus:z-10"
+                    id="zubereitungszeit"
+                    name="zubereitungszeit"
+                    value={recipe.zubereitungszeit}
+                    onChange={(e) => handleChange(e)}
+                  >
+                    <option>5min - 20min</option>
+                    <option>20min - 45min</option>
+                    <option>45min - 1h 30min</option>
+                    <option>1h 30min +</option>
+                  </select>
                 </div>
-                {/* <div className="flex flex-row w-1/2 items-center space-x-2">
-									<label
-										htmlFor="zubereitungszeit"
-										className="text-white text-lg pl-4">
-										Zubereitungszeit:
-									</label>
-									<div className="flex-row flex items-center p-1">
-										<input
-											className=" rounded-l-full h-10 relative block w-[70px] pl-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10 "
-											id="zubereitungszeit"
-											name="zubereitungszeit"
-											type={"number"}
-											placeholder="10..."></input>
-										<select
-											className="text-black rounded-r-full focus:z-10 w-28 h-10 focus:outline-none focus:ring-bright-orange focus:border-bright-orange"
-											id="schwierigkeitsgrad ">
-											<option selected>Minuten</option>
-											<option>Stunden</option>
-											<option>Tage</option>
-										</select>
-									</div>
-								</div>
-								 */}
-                <div className="flex flex-row w-1/3 justify-center items-center space-x-2">
+                <div className="flex flex-col w-1/3 justify-start items-center space-x-2">
                   <label
                     htmlFor="portionen"
                     className="text-white text-lg pl-4"
@@ -523,14 +576,14 @@ function Baukasten() {
                       className="appearance-none bg-white rounded-full max-h-10 relative block w-20 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10 "
                       id="portionen"
                       name="portionen"
-                      type={"number"}
+                      type="number"
                       placeholder="1"
                       value={recipe.portionen}
                       onChange={(e) => handleChange(e)}
                     ></input>
                   </div>
                 </div>
-                <div className="flex flex-row w-1/3 justify-center items-center space-x-2">
+                <div className="flex flex-col w-1/3 justify-start items-center space-x-2">
                   <label
                     htmlFor="schwierigkeitsgrad"
                     className="text-white text-lg pl-4"
@@ -555,37 +608,32 @@ function Baukasten() {
               <div className="flex flex-col w-full space-y-5 p-2">
                 <div className="flex flex-row w-full space-x-6">
                   <label
-                    htmlFor="wichtige-kuechenutensilien"
-                    className="text-white text-lg pl-4 w-2/5"
+                    htmlFor="wichtigeUtensilien"
+                    className="text-white text-lg w-2/6"
                   >
                     Küchenutensilien(optional):
                   </label>
                   <textarea
-                    className="mb-5 bg-white appearance-none rounded-3xl relative block w-full self-end px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
+                    className="mb-5 bg-white appearance-none rounded-3xl relative block w-4/6 self-end px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
                     id="wichtigeUtensilien"
-                    name="wichtigeUtensilien"
-                    value={recipe.wichtigeUtensilien}
+                    name="utensilien"
+                    value={recipe.utensilien}
                     onChange={(e) => handleChange(e)}
                     placeholder="..."
                   ></textarea>
                 </div>
                 <div className="flex flex-row w-full space-x-6">
-                  <label
-                    htmlFor="quellen"
-                    className="text-white text-lg pl-4 w-2/5"
-                  >
+                  <label htmlFor="quellen" className="text-white text-lg w-2/6">
                     Social media Links zu deinem Rezept(optional):
                   </label>
-                  <div className="flex items-end w-full justify-end">
-                    <textarea
-                      className="mb-5 bg-white appearance-none rounded-3xl relative block w-full px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
-                      id="quellen"
-                      name="quellen"
-                      placeholder="..."
-                      value={recipe.quellen}
-                      onChange={(e) => handleChange(e)}
-                    ></textarea>
-                  </div>
+                  <textarea
+                    className="mb-5 bg-white appearance-none rounded-3xl relative block w-4/6 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
+                    id="quellen"
+                    name="quellen"
+                    placeholder="..."
+                    value={recipe.quellen}
+                    onChange={(e) => handleChange(e)}
+                  ></textarea>
                 </div>
               </div>
             </div>
@@ -620,18 +668,18 @@ function Baukasten() {
                         }}
                         className="bg-white w-full mb-2 text-lg appearance-none rounded-3xl relative block h-24 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
                         type={"text"}
-                        placeholder={`${step.id + 1}. Schritt...`}
+                        placeholder={`${step.nummer}. Schritt...`}
                       ></textarea>
                     </div>
                   </div>
                   <div className="flex flex-row items-center justify-center w-2/6">
-                    {steps[index]?.img ? (
+                    {steps[index]?.imageRaw ? (
                       <div className="items-center justify-center flex w-full">
                         <div className="items-center flex w-full justify-center h-full">
                           <button
                             type="button"
                             className="peer z-30 absolute  inline-block overflow-hidden h-24 w-24 hover:bg-slate-900 opacity-40 rounded-md"
-                            onClick={() => removeStepImage(step)}
+                            onClick={() => removeStepImage(step, index)}
                           ></button>
                           <div className="flex z-0 peer-hover:z-20 h-24 w-24 justify-center items-center">
                             <XIcon className="h-20 text-bright-orange"></XIcon>
@@ -639,32 +687,32 @@ function Baukasten() {
                           <img
                             className="w-24 h-24 absolute z-1 rounded-md"
                             alt="not found"
-                            src={URL.createObjectURL(steps[index].img)}
+                            src={URL.createObjectURL(steps[index].imageRaw)}
                           />
                         </div>
                       </div>
                     ) : (
                       <div className="flex w-full items-center flex-col">
                         <label
-                          htmlFor={`stepImage-input ${step.id}`}
+                          htmlFor={`stepImage-input ${step.nummer}`}
                           className="cursor-pointer"
                         >
-                          Bild für Schritt {step.id + 1} (optional)
+                          Bild für Schritt {step.nummer} (optional)
                         </label>
                         <label
-                          id={`stepImage-input-label ${step.id}`}
-                          htmlFor={`stepImage-input ${step.id}`}
+                          id={`stepImage-input-label ${step.nummer}`}
+                          htmlFor={`stepImage-input ${step.nummer}`}
                           className="cursor-pointer p-2"
                         >
                           <CloudUploadIcon className="h-12 text-bright-orange"></CloudUploadIcon>
                         </label>
                         <div id="step-1-pic">
                           <input
-                            id={`stepImage-input ${step.id}`}
+                            id={`stepImage-input ${step.nummer}`}
                             type="file"
                             className="bg-bright-orange hidden"
                             onChange={(event) => {
-                              addStepImage(event, step)
+                              addStepImage(event, index)
                             }}
                           ></input>
                         </div>
@@ -784,11 +832,11 @@ function Baukasten() {
               ""
             ) : status === "submitted" ? (
               <div
-                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
                 role="alert"
               >
-                <span class="font-medium">Glückwunsch!</span> Dein Rezept wurde
-                hochgeladen.
+                <span className="font-medium">Glückwunsch!</span> Dein Rezept
+                wurde hochgeladen.
               </div>
             ) : (
               ""
@@ -809,7 +857,7 @@ function Baukasten() {
                 onClick={(e) => {
                   handleSubmit(e)
                 }}
-                className="relative disabled:gray-400 cursor-pointer w-60 flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-bright-orange hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bright-orange"
+                className="relative disabled:bg-gray-400 disabled:cursor-default cursor-pointer w-60 flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-bright-orange hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bright-orange"
               >
                 {status === "unsubmitted" ? (
                   "Submit"

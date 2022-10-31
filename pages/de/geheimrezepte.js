@@ -5,33 +5,36 @@ import RezeptComponent from "../../Components/RezeptComponent"
 import tagData from "../../data/tagData"
 import recipeData from "../../data/recipeData"
 import axios from "axios"
+import { useContext } from "react"
+import AppContext from "../../helpers/AppContext"
 
 function GeheimRezepte() {
   const tags = tagData
-  const recipes = recipeData
   const searchBar = useRef(null)
   const [openAccordion, setOpenAccordion] = useState(0)
 
+  const [recipes, setRecipes] = useState([])
   const [searchInput, setSearchInput] = useState("")
   const shownRecipes = useRef(recipes)
   const [chosenTags, setChosenTags] = useState([])
   const accordionComponent = useRef()
   const [kochzeit, setKochzeit] = useState(0)
-  const [dbRecipes, setDbRecipes] = useState([])
+  const context = useContext(AppContext)
 
   useEffect(() => {
-    let data = { column: "recipeType", index: "Geheimrezept" }
     fetch("/api/rezept-get", {
-      method: "post",
-      body: JSON.stringify(data),
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        call: "list-geheimrezepte",
+      }),
     })
-      .then((res) => {
-        res.json().then((data) => {
-          setDbRecipes(data)
-        })
+      .then((res) => res.json())
+      .then((data) => {
+        setRecipes(data)
       })
       .catch((err) => {
-        console.log(err)
+        alert(err)
       })
   }, [])
 
@@ -237,7 +240,7 @@ function GeheimRezepte() {
             </div>
             <div className="border-l w-5/6 border-black">
               <div className="flex flex-wrap w-full gap-x-8 gap-y-10 translate-y-10 justify-center ">
-                {dbRecipes?.map((item, index) => (
+                {recipes?.map((item, index) => (
                   <div key={index}>
                     <RezeptComponent item={item} index={index} />
                   </div>

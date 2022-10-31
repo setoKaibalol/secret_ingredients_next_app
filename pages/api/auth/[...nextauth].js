@@ -5,22 +5,13 @@ import FacebookProvider from "next-auth/providers/facebook"
 import CredentialsProvider from "next-auth/providers/credentials"
 import InstagramProvider from "next-auth/providers/instagram"
 import TwitterProvider from "next-auth/providers/twitter"
-import mysql from "mysql2"
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import prisma from "../../../prisma/PrismaClient"
 import axios from "axios"
-
-const mysqlPasswordProduction = process.env.MYSQL_PASSWORD_PRODUCTION
-const mysqlUsernameProduction = process.env.MYSQL_USERNAME_PRODUCTION
-console.log(process.env.develop)
-const db = mysql.createPool({
-  port: "3306",
-  host: "eu-cdbr-west-03.cleardb.net",
-  user: mysqlUsernameProduction,
-  password: mysqlPasswordProduction,
-  database: "heroku_627d1cf77eefb59",
-})
 
 export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
+  adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
