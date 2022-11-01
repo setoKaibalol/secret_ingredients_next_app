@@ -233,7 +233,7 @@ export default function Header() {
                         <Menu.Item>
                           {({ active }) => (
                             <Link href="/account">
-                              <button
+                              <a
                                 className={
                                   "" + router.pathname == "/de/profil"
                                     ? "w-full block px-4 py-2 text-sm font-medium rounded-md dark:bg-dark-blue border text-white"
@@ -241,13 +241,13 @@ export default function Header() {
                                 }
                               >
                                 Account
-                              </button>
+                              </a>
                             </Link>
                           )}
                         </Menu.Item>
                         <Menu.Item>
                           <Link href="/de/profil">
-                            <button
+                            <a
                               className={
                                 "" + router.pathname == "/de/profil"
                                   ? "w-full block px-4 py-2 text-sm font-medium rounded-md dark:bg-dark-blue border text-white"
@@ -255,20 +255,20 @@ export default function Header() {
                               }
                             >
                               Profil
-                            </button>
+                            </a>
                           </Link>
                         </Menu.Item>
                         <div className="border-2 dark:border-slate-700 -mx-2"></div>
                         <Menu.Item>
                           {({ active }) => (
-                            <button
+                            <a
                               className="block px-6 py-2 text-sm font-medium rounded-lg hover:bg-gray-300 dark:hover:bg-dark-blue border border-transparent w-full"
                               onClick={() => {
                                 signOut({ callbackUrl: "/" })
                               }}
                             >
                               Sign out
-                            </button>
+                            </a>
                           )}
                         </Menu.Item>
                       </Menu.Items>
@@ -286,9 +286,9 @@ export default function Header() {
                     </div>
                     <div className="hidden lg:flex items-center justify-end md:mr-6">
                       <Link href="/de/auth/konto-erstellen">
-                        <button className="whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-bright-orange hover:bg-orange-400">
+                        <a className="whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-bright-orange hover:bg-orange-400">
                           konto erstellen
-                        </button>
+                        </a>
                       </Link>
                     </div>
 

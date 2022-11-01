@@ -32,15 +32,13 @@ function Baukasten() {
   const [recipe, setRecipe] = useState({
     userId: userId,
     name: "",
-    zutaten: "",
     typ: "Grundrezept",
     likes: 0,
-    zubereitungszeit: "",
+    zubereitungszeit: "5min - 20min",
     portionen: 1,
     schwierigkeitsgrad: "Einfach",
     utensilien: "",
     quellen: "",
-    steps: "",
     image: "",
   })
 
@@ -108,9 +106,7 @@ function Baukasten() {
       })
         .then((res) => res.json())
         .then((data) => {
-          setRecipeId(data.id)
           setStatus("submitted")
-          alert("Rezept hinzugefügt!")
         })
         .catch((error) => {
           setStatus("zutaten unsubmitted")
@@ -123,9 +119,7 @@ function Baukasten() {
         headers: { "Content-Type": "application/json" },
       })
         .then((res) => res.json())
-        .then((data) => {
-          setRecipeId(data.id)
-        })
+        .then((data) => {})
         .catch((error) => {
           setStatus("steps unsubmitted")
           alert("steps nicht hochgeladen.")
@@ -164,11 +158,12 @@ function Baukasten() {
     const hostStepImages = () => {
       return new Promise((resolve, reject) => {
         var fetches = []
-        let body = new FormData()
-        body.set("key", "6fac261951b6c63ff9999b1a5cd53a73")
 
         for (let index = 0; index < steps.length; index++) {
           if (steps[index].imageRaw) {
+            let body = new FormData()
+            body.set("key", "6fac261951b6c63ff9999b1a5cd53a73")
+
             body.append("image", steps[index].imageRaw)
 
             fetches.push(
@@ -186,18 +181,18 @@ function Baukasten() {
             )
           }
         }
-        console.log("187:steps ", steps)
         Promise.all(fetches).then(() => {
-          resolve
+          console.log("hi")
+          resolve()
         })
       })
     }
-    await hostRecipeImage()
-      .then(() => {
-        hostStepImages()
+
+    await hostStepImages()
+      .then(async () => {
+        await hostRecipeImage()
       })
       .then(() => {
-        console.log(object)
         setRecipe(object)
         setImgUploaded(true)
       })

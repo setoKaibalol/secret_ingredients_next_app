@@ -80,7 +80,7 @@ model rezept {
 
 model rezeptZutat {
   id        Int     @id @default(autoincrement())
-  recipe    rezept  @relation(fields: [recipeId], references: [id])
+  recipe    rezept  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   recipeId  Int
   name      String
   menge     Float
@@ -90,7 +90,7 @@ model rezeptZutat {
 
 model rezeptStep {
   id       Int     @id @default(autoincrement())
-  recipe   rezept  @relation(fields: [recipeId], references: [id])
+  recipe   rezept  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   recipeId Int
   nummer   Int
   text     String
@@ -102,7 +102,7 @@ model rezeptKommentar {
   author   User   @relation(fields: [userId], references: [id])
   userId   String
   text     String
-  rezept   rezept @relation(fields: [rezeptId], references: [id])
+  rezept   rezept @relation(fields: [rezeptId], references: [id], onDelete: Cascade)
   rezeptId Int
 }
 
