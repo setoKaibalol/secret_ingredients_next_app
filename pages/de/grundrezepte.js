@@ -22,7 +22,7 @@ function GrundRezepte() {
   const [reloadRecipes, setReloadRecipes] = useState(false)
 
   useEffect(() => {
-    fetch("/api/rezept-get", {
+    fetch("/api/rezepte/rezept-get", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

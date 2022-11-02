@@ -70,7 +70,7 @@ function Baukasten() {
 
   useEffect(() => {
     if (status === "loading") {
-      fetch("/api/rezept-upload", {
+      fetch("/api/rezepte/rezept-upload", {
         method: "post",
         body: JSON.stringify({ call: "rezept-upload", data: recipe }),
         headers: { "Content-Type": "application/json" },
@@ -99,7 +99,7 @@ function Baukasten() {
       zutatenObject.forEach((zutat) => (zutat.menge = parseFloat(zutat.menge)))
       setZutaten(zutatenObject)
 
-      fetch("/api/rezept-upload", {
+      fetch("/api/rezepte/rezept-upload", {
         method: "post",
         body: JSON.stringify({ call: "zutaten-upload", data: zutaten }),
         headers: { "Content-Type": "application/json" },
@@ -113,7 +113,7 @@ function Baukasten() {
           alert("zutaten nicht hochgeladen.")
         })
 
-      fetch("/api/rezept-upload", {
+      fetch("/api/rezepte/rezept-upload", {
         method: "post",
         body: JSON.stringify({ call: "steps-upload", data: steps }),
         headers: { "Content-Type": "application/json" },

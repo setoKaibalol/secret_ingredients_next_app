@@ -8,12 +8,13 @@ import {
 } from "@heroicons/react/outline"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
+import Link from "next/link"
 
 function RezeptComponent({ item, index, reloadRecipes, setReloadRecipes }) {
   const { data: session } = useSession()
   console.log(item)
   const deleteRecipe = (itemId) => {
-    fetch("../api/rezept-delete", {
+    fetch("../api/rezepte/rezept-delete", {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -108,11 +109,14 @@ function RezeptComponent({ item, index, reloadRecipes, setReloadRecipes }) {
             <HeartIcon className="w-10 text-bright-orange hover:bg-cyan-900 p-1 cursor-pointer rounded-full"></HeartIcon>
             <ShareIcon className="w-10 text-bright-orange hover:bg-cyan-900 p-1 cursor-pointer rounded-full"></ShareIcon>
           </div>
-          <div className="flex w-3/6 justify-end">
-            <button className="border border-bright-orange mr-2 px-2 text-md text-white bg-bright-orange hover:bg-orange-400 hover:-translate-x-[0.5px] hover:-translate-y-[0.5px]  rounded-md font-medium">
+          <Link
+            href={"/de/rezepte/" + item.id}
+            className="flex w-3/6 justify-end"
+          >
+            <a className="border border-bright-orange mr-2 px-2 text-md text-white bg-bright-orange hover:bg-orange-400 hover:-translate-x-[0.5px] hover:-translate-y-[0.5px]  rounded-md font-medium">
               Zum Rezept
-            </button>
-          </div>
+            </a>
+          </Link>
         </div>
       </div>
     </div>
