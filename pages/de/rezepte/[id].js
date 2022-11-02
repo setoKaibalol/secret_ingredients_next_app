@@ -2,13 +2,16 @@ import Image from "next/image"
 import React, { useEffect, useState } from "react"
 
 export const getStaticPaths = async () => {
-  const res = await fetch("http://localhost:3000/api/rezepte/rezept-get", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      call: "list-rezepte",
-    }),
-  })
+  const res = await fetch(
+    "https://secret-ingredients.vercel.app/api/rezepte/rezept-get",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        call: "list-rezepte",
+      }),
+    }
+  )
   const recipes = await res.json()
 
   const paths = recipes.map((recipe) => {
@@ -25,14 +28,17 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async ({ params }) => {
   console.log(params)
-  const res = await fetch("http://localhost:3000/api/rezepte/rezept-get", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      call: "get-rezept",
-      data: { id: parseInt(params.id) },
-    }),
-  })
+  const res = await fetch(
+    "https://secret-ingredients.vercel.app/api/rezepte/rezept-get",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        call: "get-rezept",
+        data: { id: parseInt(params.id) },
+      }),
+    }
+  )
   const recipe = await res.json()
 
   return {
