@@ -39,7 +39,7 @@ export default async function handler(req, res) {
         console.log(err)
         res.status(500).send("failed")
       })
-  } else if (req.body.call === "get-rezept") {
+  } else if (req.body?.call === "get-rezept") {
     await prisma.rezept
       .findFirst({
         where: {

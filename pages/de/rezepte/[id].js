@@ -6,7 +6,7 @@ export const getStaticPaths = async () => {
     "https://secret-ingredients.vercel.app/api/rezepte/rezept-get",
     {
       method: "POST",
-      headers: { "Content-Type": "application/json", "User-Agent": "" },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         call: "list-rezepte",
       }),
@@ -21,24 +21,24 @@ export const getStaticPaths = async () => {
   })
 
   return {
-    paths,
+    paths: paths,
     fallback: false,
   }
 }
 
 export const getStaticProps = async ({ params }) => {
-  console.log(params)
   const res = await fetch(
     "https://secret-ingredients.vercel.app/api/rezepte/rezept-get",
     {
       method: "POST",
-      headers: { "Content-Type": "application/json", "User-Agent": "" },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         call: "get-rezept",
         data: { id: parseInt(params.id) },
       }),
     }
   )
+  console.log(res)
   const recipe = await res.json()
 
   return {
@@ -49,6 +49,7 @@ export const getStaticProps = async ({ params }) => {
 }
 
 export default function Recipe({ recipe }) {
+  console.log(recipe)
   const [author, setAuthor] = useState("")
   const [steps, setSteps] = useState([])
   const [zutaten, setZutaten] = useState([])
