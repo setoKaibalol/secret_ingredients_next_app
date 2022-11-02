@@ -155,7 +155,7 @@ export default function Recipe({ recipe }) {
           <div>
             <h1>Schritte:</h1>
             {steps.map((step, index) => (
-              <div className="flex flex-row space-x-4 my-10">
+              <div key={index} className="flex flex-row space-x-4 my-10">
                 <p>{step.nummer}: </p>
                 <div className="flex flex-row space-x-4">
                   <p>{step.text} </p>
@@ -168,7 +168,7 @@ export default function Recipe({ recipe }) {
           <div>
             <h1>Zutaten:</h1>
             {zutaten.map((zutat, index) => (
-              <div className="flex flex-row space-x-4 my-10">
+              <div key={index} className="flex flex-row space-x-4 my-10">
                 <p>{zutat.name}: </p>
                 <div className="flex flex-row space-x-4">
                   <p>
