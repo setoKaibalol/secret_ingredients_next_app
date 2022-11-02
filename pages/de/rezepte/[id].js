@@ -6,6 +6,7 @@ export const getStaticPaths = async () => {
     "https://secret-ingredients.vercel.app/api/rezepte/rezept-get",
     {
       method: "POST",
+      headers: { "Content-Type": "application/json", "User-Agent": "" },
       body: JSON.stringify({
         call: "list-rezepte",
       }),
@@ -31,6 +32,7 @@ export const getStaticProps = async ({ params }) => {
     "https://secret-ingredients.vercel.app/api/rezepte/rezept-get",
     {
       method: "POST",
+      headers: { "Content-Type": "application/json", "User-Agent": "" },
       body: JSON.stringify({
         call: "get-rezept",
         data: { id: parseInt(params.id) },
