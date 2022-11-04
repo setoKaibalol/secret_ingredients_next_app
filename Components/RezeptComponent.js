@@ -12,7 +12,6 @@ import Link from "next/link"
 
 function RezeptComponent({ item, index, reloadRecipes, setReloadRecipes }) {
   const { data: session } = useSession()
-  console.log(item)
   const deleteRecipe = (itemId) => {
     fetch("../api/rezepte/rezept-delete", {
       method: "post",

@@ -1,17 +1,8 @@
 import Image from "next/image"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useContext } from "react"
 
 export const getStaticPaths = async () => {
-  const res = await fetch(
-    "https://secret-ingredients.vercel.app/api/rezepte/rezept-get",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        call: "list-rezepte",
-      }),
-    }
-  )
+  let res = await fetch("https://secret-ingredients.vercel.app/api/rezepte")
   const recipes = await res.json()
 
   const paths = recipes.map((recipe) => {
@@ -26,19 +17,11 @@ export const getStaticPaths = async () => {
   }
 }
 
-export const getStaticProps = async ({ params }) => {
+export const getStaticProps = async (context) => {
+  const id = context.params.id
   const res = await fetch(
-    "https://secret-ingredients.vercel.app/api/rezepte/rezept-get",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        call: "get-rezept",
-        data: { id: parseInt(params.id) },
-      }),
-    }
+    "https://secret-ingredients.vercel.app/api/rezepte/" + id
   )
-  console.log(res)
   const recipe = await res.json()
 
   return {
@@ -49,7 +32,7 @@ export const getStaticProps = async ({ params }) => {
 }
 
 export default function Recipe({ recipe }) {
-  console.log(recipe)
+  recipe = recipe[0]
   const [author, setAuthor] = useState("")
   const [steps, setSteps] = useState([])
   const [zutaten, setZutaten] = useState([])
@@ -65,7 +48,6 @@ export default function Recipe({ recipe }) {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data)
         setAuthor(data)
       })
       .catch((err) => {
@@ -84,7 +66,6 @@ export default function Recipe({ recipe }) {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data)
         setZutaten(data)
       })
       .catch((err) => {
@@ -110,7 +91,6 @@ export default function Recipe({ recipe }) {
         alert(err)
       })
   }, [])
-
   return (
     <div className="w-full h-full flex justify-center">
       <div className="w-5/6 p-10 flex flex-col justify-between">
@@ -166,8 +146,11 @@ export default function Recipe({ recipe }) {
                 <p>{step.nummer}: </p>
                 <div className="flex flex-row space-x-4">
                   <p>{step.text} </p>
-
-                  <Image src={step.image} width={100} height={100}></Image>
+                  {step.image ? (
+                    <Image src={step.image} width={100} height={100}></Image>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             ))}

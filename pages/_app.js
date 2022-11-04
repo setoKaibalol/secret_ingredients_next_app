@@ -5,15 +5,25 @@ import AppContext from "../helpers/AppContext"
 import { useEffect, useState } from "react"
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
-  const [grundrezepte, setGrundrezepte] = useState([])
-  const [geheimrezepte, setGeheimrezepte] = useState([])
+  const [rezepte, setRezepte] = useState([])
+
+  useEffect(() => {
+    const lol = async () => {
+      const res = await fetch("https://secret-ingredients.vercel.app/" + 1)
+      const recipe = await res.json()
+      console.log(recipe)
+    }
+    lol()
+  }, [])
 
   return (
     <>
-      <SessionProvider session={session}>
-        <Navbar />
-        <Component {...pageProps} />
-      </SessionProvider>
+      <AppContext.Provider value={[rezepte, setRezepte]}>
+        <SessionProvider session={session}>
+          <Navbar />
+          <Component {...pageProps} />
+        </SessionProvider>
+      </AppContext.Provider>
     </>
   )
 }
