@@ -3,7 +3,7 @@ export default async function handler(req, res) {
     await prisma.rezeptStep
       .findMany({
         where: {
-          recipeId: req.body.data.recipeId,
+          recipeId: req.body.data.id,
         },
       })
       .then((result) => {
