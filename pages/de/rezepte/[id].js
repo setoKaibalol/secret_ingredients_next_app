@@ -1,11 +1,12 @@
 import Image from "next/image"
 import React, { useEffect, useState, useContext } from "react"
+import axios from "axios"
+import prisma from "../../../prisma/PrismaClient"
 
 export const getStaticPaths = async () => {
-  let res = await fetch("https://secret-ingredients.vercel.app/api/rezepte")
-  const recipes = await res.json()
+  const res = await prisma.rezept.findMany({})
 
-  const paths = recipes.map((recipe) => {
+  const paths = res.map((recipe) => {
     return {
       params: { id: recipe.id.toString() },
     }
@@ -19,20 +20,21 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async (context) => {
   const id = context.params.id
-  const res = await fetch(
-    "https://secret-ingredients.vercel.app/api/rezepte/" + id
-  )
-  const recipe = await res.json()
+  const res = await prisma.rezept.findFirst({
+    where: {
+      id: parseInt(id),
+    },
+  })
 
   return {
     props: {
-      recipe: recipe,
+      recipe: res,
     },
   }
 }
 
 export default function Recipe({ recipe }) {
-  recipe = recipe[0]
+  console.log(recipe)
   const [author, setAuthor] = useState("")
   const [steps, setSteps] = useState([])
   const [zutaten, setZutaten] = useState([])

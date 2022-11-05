@@ -7,15 +7,6 @@ import { useEffect, useState } from "react"
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   const [rezepte, setRezepte] = useState([])
 
-  useEffect(() => {
-    const lol = async () => {
-      const res = await fetch("https://secret-ingredients.vercel.app/" + 1)
-      const recipe = await res.json()
-      console.log(recipe)
-    }
-    lol()
-  }, [])
-
   return (
     <>
       <AppContext.Provider value={[rezepte, setRezepte]}>
