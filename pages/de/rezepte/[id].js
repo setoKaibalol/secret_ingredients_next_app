@@ -40,58 +40,55 @@ export default function Recipe({ recipe }) {
   const [zutaten, setZutaten] = useState([])
 
   useEffect(() => {
-    fetch("/api/user", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        call: "get-user-by-recipeId",
-        data: { id: recipe.userId },
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setAuthor(data)
-      })
-      .catch((err) => {
-        alert(err)
-      })
-  }, [])
+    const getSteps = async () => {
+      await prisma.rezeptStep
+        .findMany({
+          where: {
+            recipeId: recipe.id,
+          },
+        })
+        .then((res) => res.json())
+        .then((data) => {
+          setSteps(data)
+        })
+        .catch((err) => {
+          alert(err)
+        })
+    }
+    const getZutaten = async () => {
+      await prisma.rezeptZutat
+        .findMany({
+          where: {
+            recipeId: recipe.id,
+          },
+        })
+        .then((res) => res.json())
+        .then((data) => {
+          setZutaten(data)
+        })
+        .catch((err) => {
+          alert(err)
+        })
+    }
 
-  useEffect(() => {
-    fetch("/api/rezepte/zutaten-get", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        call: "get-rezept-zutaten",
-        data: { id: recipe.id },
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setZutaten(data)
-      })
-      .catch((err) => {
-        alert(err)
-      })
-  }, [])
-
-  useEffect(() => {
-    fetch("/api/rezepte/steps-get", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        call: "get-rezept-steps",
-        data: { id: recipe.id },
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data)
-        setSteps(data)
-      })
-      .catch((err) => {
-        alert(err)
-      })
+    const getUser = async () => {
+      await prisma.user
+        .findFirst({
+          where: {
+            id: recipe.userId,
+          },
+        })
+        .then((res) => res.json())
+        .then((data) => {
+          setAuthor(data)
+        })
+        .catch((err) => {
+          alert(err)
+        })
+    }
+    getSteps()
+    getZutaten()
+    getUser()
   }, [])
   return (
     <div className="w-full h-full flex justify-center">
