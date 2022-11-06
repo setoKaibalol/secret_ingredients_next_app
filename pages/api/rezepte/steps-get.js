@@ -1,3 +1,5 @@
+import prisma from "../../../prisma/PrismaClient"
+
 export default async function handler(req, res) {
   if (req.body.call === "get-rezept-steps") {
     await prisma.rezeptStep
