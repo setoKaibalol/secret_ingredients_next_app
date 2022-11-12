@@ -76,6 +76,9 @@ model rezept {
   kommentare         rezeptKommentar[]
   image              String
   typ                String
+  kategorie          kategorien        @relation(fields: [kategorienId], references: [id])
+  kategorienId       Int
+  tags               tags[]
 }
 
 model rezeptZutat {
@@ -104,6 +107,19 @@ model rezeptKommentar {
   text     String
   rezept   rezept @relation(fields: [rezeptId], references: [id], onDelete: Cascade)
   rezeptId Int
+}
+
+model tags {
+  id     Int      @id @default(autoincrement())
+  name   String
+  color  String   @default("gray")
+  rezept rezept[]
+}
+
+model kategorien {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  rezepte rezept[]
 }
 
 enum Role {

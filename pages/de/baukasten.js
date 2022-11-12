@@ -13,6 +13,7 @@ import {
 } from "@heroicons/react/outline"
 import { useSession } from "next-auth/react"
 import MoonLoader from "react-spinners/MoonLoader"
+import { BsCheckLg } from "react-icons/bs"
 
 function Baukasten() {
   const { data: session } = useSession()
@@ -22,11 +23,11 @@ function Baukasten() {
   const [imgUploaded, setImgUploaded] = useState(false)
 
   const [steps, setSteps] = useState([
-    { recipeId: "", nummer: 1, text: "", image: "", imageRaw: "" },
+    { nummer: 1, text: "", image: "", image: "" },
   ])
 
   const [zutaten, setZutaten] = useState([
-    { recipeId: "", name: "", menge: "", einheit: "", kommentar: "" },
+    { name: "", menge: "", einheit: "", kommentar: "" },
   ])
 
   const [recipe, setRecipe] = useState({
@@ -37,12 +38,13 @@ function Baukasten() {
     zubereitungszeit: "5min - 20min",
     portionen: 1,
     schwierigkeitsgrad: "Einfach",
+    kategorie: "Vegetarisch",
     utensilien: "",
     quellen: "",
     image: "",
+    steps: [],
+    zutaten: [],
   })
-
-  const [recipeId, setRecipeId] = useState()
 
   const [selectedImage, setSelectedImage] = useState(null)
   const [displayRecipes, setDisplayRecipes] = useState([])
@@ -69,7 +71,7 @@ function Baukasten() {
   }, [session])
 
   useEffect(() => {
-    if (status === "loading") {
+    if (status === "recipeUploading") {
       fetch("/api/rezepte/rezept-upload", {
         method: "post",
         body: JSON.stringify({ call: "rezept-upload", data: recipe }),
@@ -77,7 +79,7 @@ function Baukasten() {
       })
         .then((res) => res.json())
         .then((data) => {
-          setRecipeId(data.id)
+          setStatus("submitted")
         })
         .catch((error) => {
           setStatus("unsubmitted")
@@ -87,51 +89,13 @@ function Baukasten() {
     }
   }, [imgUploaded])
 
-  useEffect(() => {
-    if (recipeId) {
-      let stepsObject = steps
-      stepsObject.forEach((step) => (step.recipeId = recipeId))
-      stepsObject.forEach((step) => delete step.imageRaw)
-      setSteps(stepsObject)
-
-      let zutatenObject = zutaten
-      zutatenObject.forEach((zutat) => (zutat.recipeId = recipeId))
-      zutatenObject.forEach((zutat) => (zutat.menge = parseFloat(zutat.menge)))
-      setZutaten(zutatenObject)
-
-      fetch("/api/rezepte/rezept-upload", {
-        method: "post",
-        body: JSON.stringify({ call: "zutaten-upload", data: zutaten }),
-        headers: { "Content-Type": "application/json" },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setStatus("submitted")
-        })
-        .catch((error) => {
-          setStatus("zutaten unsubmitted")
-          alert("zutaten nicht hochgeladen.")
-        })
-
-      fetch("/api/rezepte/rezept-upload", {
-        method: "post",
-        body: JSON.stringify({ call: "steps-upload", data: steps }),
-        headers: { "Content-Type": "application/json" },
-      })
-        .then((res) => res.json())
-        .then((data) => {})
-        .catch((error) => {
-          setStatus("steps unsubmitted")
-          alert("steps nicht hochgeladen.")
-        })
-    }
-  }, [recipeId])
-
   const handleSubmit = async (e) => {
     e.preventDefault()
     let object = recipe
     object.portionen = parseInt(object.portionen)
-    setStatus("loading")
+    object.steps = steps
+    object.zutaten = zutaten
+    setStatus("imagesUploading")
 
     const hostRecipeImage = () => {
       return new Promise((resolve, reject) => {
@@ -160,11 +124,11 @@ function Baukasten() {
         var fetches = []
 
         for (let index = 0; index < steps.length; index++) {
-          if (steps[index].imageRaw) {
+          if (steps[index].image) {
             let body = new FormData()
             body.set("key", "6fac261951b6c63ff9999b1a5cd53a73")
 
-            body.append("image", steps[index].imageRaw)
+            body.append("image", steps[index].image)
 
             fetches.push(
               axios({
@@ -182,7 +146,7 @@ function Baukasten() {
           }
         }
         Promise.all(fetches).then(() => {
-          console.log("hi")
+          setStatus("recipeUploading")
           resolve()
         })
       })
@@ -202,7 +166,6 @@ function Baukasten() {
     if (zutaten.length < 21) {
       let array = [...zutaten]
       array.push({
-        recipeId: recipeId,
         name: "",
         menge: "",
         einheit: "",
@@ -243,13 +206,13 @@ function Baukasten() {
   const addStepImage = (e, index) => {
     let image = e.target.files[0]
     let array = [...steps]
-    array[index].imageRaw = image
+    array[index].image = image
     setSteps(array)
   }
 
   const removeStepImage = (step, index) => {
     let array = [...steps]
-    array[index].imageRaw = ""
+    array[index].image = ""
     setSteps(array)
   }
 
@@ -269,7 +232,7 @@ function Baukasten() {
       let input = e.target.value
       let array = [...steps]
 
-      array[step.nummer - 1].imageRaw = input
+      array[step.nummer - 1].image = input
 
       setSteps(array)
     }
@@ -287,7 +250,7 @@ function Baukasten() {
       let input = e.target.value
       let array = [...zutaten]
 
-      array[index].menge = input
+      array[index].menge = parseInt(input)
 
       setZutaten(array)
     } else if (e.target.name === "einheit") {
@@ -307,43 +270,6 @@ function Baukasten() {
     }
   }
 
-  /*   const getChosenTags = (mode) => {
-    // 1 = nur chosen Zutat Tags
-    // 2 = nur chosen Sonstige Tags
-    // 3 = alle chosen Tags
-    if (mode === 1) {
-      return tags
-        ?.filter((val) => {
-          if (val.zutat) {
-            return val
-          }
-        })
-        ?.filter((val) => {
-          if (val?.chosen === 1) {
-            return val
-          }
-        })
-    } else if (mode === 2) {
-      return tags
-        ?.filter((val) => {
-          if (!val.zutat) {
-            return val
-          }
-        })
-        ?.filter((val) => {
-          if (val?.chosen === 1) {
-            return val
-          }
-        })
-    } else if (mode === 3) {
-      return tags?.filter((val) => {
-        if (val?.chosen === 1) {
-          return val
-        }
-      })
-    }
-  }
- */
   return (
     <div className="flex bg-[url('/media/cuttingBoardBackground.jpg')] bg-contain">
       <div className="absolute text-black">
@@ -599,6 +525,25 @@ function Baukasten() {
                     <option>Meisterkoch</option>
                   </select>
                 </div>
+                <div className="flex flex-col w-1/3 justify-start items-center space-x-2">
+                  <label
+                    htmlFor="kategorie"
+                    className="text-white text-lg pl-4"
+                  >
+                    Kategorie:
+                  </label>
+                  <select
+                    required
+                    className="text-gray-900 bg-white rounded-full focus:outline-none px-4 py-2 focus:ring-bright-orange focus:border-bright-orange focus:z-10"
+                    id="kategorie"
+                    name="kategorie"
+                    value={recipe.kategorie}
+                    onChange={(e) => handleChange(e)}
+                  >
+                    <option>Vegetarisch</option>
+                    <option>Vegan</option>
+                  </select>
+                </div>
               </div>
               <div className="flex flex-col w-full space-y-5 p-2">
                 <div className="flex flex-row w-full space-x-6">
@@ -668,7 +613,7 @@ function Baukasten() {
                     </div>
                   </div>
                   <div className="flex flex-row items-center justify-center w-2/6">
-                    {steps[index]?.imageRaw ? (
+                    {steps[index]?.image ? (
                       <div className="items-center justify-center flex w-full">
                         <div className="items-center flex w-full justify-center h-full">
                           <button
@@ -682,7 +627,7 @@ function Baukasten() {
                           <img
                             className="w-24 h-24 absolute z-1 rounded-md"
                             alt="not found"
-                            src={URL.createObjectURL(steps[index].imageRaw)}
+                            src={URL.createObjectURL(steps[index].image)}
                           />
                         </div>
                       </div>
@@ -818,13 +763,13 @@ function Baukasten() {
             </div>
           </div>
           <div
-            id="rezeptName-input-div"
+            id="status-div"
             className="items-center flex flex-col justify-center bg-opacity-90 bg-dark-blue p-3 border border-bright-orange mb-5 rounded-3xl w-5/6 "
           >
-            {status === "unsubmitted" ? (
-              ""
-            ) : status === "loading" ? (
-              ""
+            {status === "imagesUploading" ? (
+              "Bilder werden hochgeladen..."
+            ) : status === "recipeUploading" ? (
+              "Rezept wird hochgeladen..."
             ) : status === "submitted" ? (
               <div
                 className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
@@ -852,14 +797,14 @@ function Baukasten() {
                 onClick={(e) => {
                   handleSubmit(e)
                 }}
-                className="relative disabled:bg-gray-400 disabled:cursor-default cursor-pointer w-60 flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-bright-orange hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bright-orange"
+                className="relative items-center disabled:bg-gray-400 disabled:cursor-default cursor-pointer w-60 flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-bright-orange hover:bg-orange-700 duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bright-orange"
               >
                 {status === "unsubmitted" ? (
-                  "Submit"
+                  "Rezept hochladen"
                 ) : status === "loading" ? (
                   <MoonLoader color="#033249" size={19}></MoonLoader>
                 ) : status === "submitted" ? (
-                  "submitted"
+                  <BsCheckLg className=" text-green-500 h-6 w-6"></BsCheckLg>
                 ) : (
                   ""
                 )}
