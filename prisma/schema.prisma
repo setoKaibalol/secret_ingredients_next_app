@@ -48,6 +48,7 @@ model User {
   sessions         Session[]
   recipes          rezept[]
   rezeptKommentare rezeptKommentar[]
+  rezeptLike       rezeptBewertung[]
 }
 
 model VerificationToken {
@@ -69,9 +70,9 @@ model rezept {
   portionen          Int
   schwierigkeitsgrad String
   utensilien         String?
-  quellen            String?
+  youtube            String
+  instagram          String
   aufrufe            Int               @default(0)
-  likes              Int               @default(0)
   dislikes           Int               @default(0)
   kommentare         rezeptKommentar[]
   image              String
@@ -79,6 +80,7 @@ model rezept {
   kategorie          kategorien        @relation(fields: [kategorienId], references: [id])
   kategorienId       Int
   tags               tags[]
+  like               rezeptBewertung[]
 }
 
 model rezeptZutat {
@@ -106,6 +108,15 @@ model rezeptKommentar {
   userId   String
   text     String
   rezept   rezept @relation(fields: [rezeptId], references: [id], onDelete: Cascade)
+  rezeptId Int
+}
+
+model rezeptBewertung {
+  id       Int    @id @default(autoincrement())
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String
+  rezept   rezept @relation(fields: [rezeptId], references: [id])
+  number   Float
   rezeptId Int
 }
 
