@@ -70,8 +70,8 @@ export default function Recipe(props) {
         <p className="text-gray-300 font-light text-lg">by {author.name}</p>
       </div>
 
-      <div className="w-5/6  min-h-screen flex-col flex space-x-8 justify-between">
-        <div className="w-full flex flex-row">
+      <div className="w-5/6  min-h-screen flex-col flex justify-between">
+        <section className="w-full flex flex-row h-[74vh]">
           <div className="flex flex-col w-4/6">
             <div className="w-full h-8 text-lg text-gray-300 font-light">
               Rezepte / {kategorie.name}
@@ -171,7 +171,7 @@ export default function Recipe(props) {
             </div>
             <div className="flex flex-row w-full justify-between pl-10">
               <button
-                onClick={() => scrollBy({ top: 2000, behavior: "smooth" })}
+                onClick={() => scrollBy({ top: 1230, behavior: "smooth" })}
                 className="flex flex-row space-x-2 items-start animate-bounce"
               >
                 <BsArrow90DegDown className="w-8 h-8 text-lg font-medium text-bright-orange "></BsArrow90DegDown>
@@ -180,7 +180,7 @@ export default function Recipe(props) {
                 </p>
               </button>
               <button
-                onClick={() => scrollBy({ top: 2000, behavior: "smooth" })}
+                onClick={() => scrollBy({ top: 850, behavior: "smooth" })}
                 className="flex flex-row space-x-2 items-start animate-bounce"
               >
                 <BsArrow90DegDown className="w-8 h-8 text-lg font-medium text-bright-orange "></BsArrow90DegDown>
@@ -190,10 +190,9 @@ export default function Recipe(props) {
               </button>
             </div>
           </div>
-        </div>
-
-        <div className="flex flex-row w-full pt-20 space-x-60">
-          <div className="w-3/6 border-gray-300 shadow-xl p-6 rounded-xl">
+        </section>
+        <section className="w-full flex flex-row mt-20 gap-x-20">
+          <div className="w-3/6 shadow-xl rounded-xl p-8">
             <Disclosure>
               {({ open }) => (
                 <>
@@ -237,7 +236,7 @@ export default function Recipe(props) {
               </form>
             </div>
           </div>
-          <div className="w-3/6 shadow-xl p-6 rounded-xl">
+          <div className="w-3/6 shadow-xl p-8 rounded-xl">
             <div className="w-full h-20 mb-20">
               <div className="w-full pb-4  justify-center flex">
                 <h2 className="font-medium text-sand-white text-xl underline">
@@ -266,7 +265,26 @@ export default function Recipe(props) {
               </ul>
             </div>
           </div>
+        </section>
+
+        <div className="justify-center flex w-full mt-20">
+          <h3 className="text-4xl text-sand-white underline font-medium">
+            Schritte:
+          </h3>
         </div>
+
+        <section className="w-full flex justify-center shadow-xl mt-20">
+          <div className="w-full p-8 ">
+            <ul>
+              {steps.map((step, index) => (
+                <li key={index}>
+                  {step.text}
+                  <Image src={step.image} width="20" height={20}></Image>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
       </div>
     </div>
   )

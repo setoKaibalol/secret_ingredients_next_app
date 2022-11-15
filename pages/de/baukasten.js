@@ -23,7 +23,7 @@ function Baukasten() {
   const [imgUploaded, setImgUploaded] = useState(false)
 
   const [steps, setSteps] = useState([
-    { nummer: 1, text: "", image: "", image: "" },
+    { nummer: 1, text: "", image: "", image: "", imageFile: null },
   ])
 
   const [zutaten, setZutaten] = useState([
@@ -89,7 +89,7 @@ function Baukasten() {
     }
   }, [imgUploaded])
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
     let object = recipe
     object.portionen = parseInt(object.portionen)
@@ -124,11 +124,11 @@ function Baukasten() {
         var fetches = []
 
         for (let index = 0; index < steps.length; index++) {
-          if (steps[index].image) {
+          if (steps[index].imageFile) {
             let body = new FormData()
             body.set("key", "6fac261951b6c63ff9999b1a5cd53a73")
 
-            body.append("image", steps[index].image)
+            body.append("image", steps[index].imageFile)
 
             fetches.push(
               axios({
@@ -137,7 +137,7 @@ function Baukasten() {
                 data: body,
               })
                 .then((res) => {
-                  steps[index].image = res.data.data.url
+                  object.steps[index].image = res.data.data.url
                 })
                 .catch((err) => {
                   console.log(err)
@@ -147,12 +147,15 @@ function Baukasten() {
         }
         Promise.all(fetches).then(() => {
           setStatus("recipeUploading")
+          object.steps.forEach((step) => {
+            delete step["imageFile"]
+          })
           resolve()
         })
       })
     }
 
-    await hostStepImages()
+    hostStepImages()
       .then(async () => {
         await hostRecipeImage()
       })
@@ -190,6 +193,7 @@ function Baukasten() {
         nummer: steps.length + 1,
         text: "",
         image: "",
+        imageFile: "",
       })
       setSteps(array)
     }
@@ -206,13 +210,13 @@ function Baukasten() {
   const addStepImage = (e, index) => {
     let image = e.target.files[0]
     let array = [...steps]
-    array[index].image = image
+    array[index].imageFile = image
     setSteps(array)
   }
 
   const removeStepImage = (step, index) => {
     let array = [...steps]
-    array[index].image = ""
+    array[index].imageFile = ""
     setSteps(array)
   }
 
@@ -226,13 +230,6 @@ function Baukasten() {
       let array = [...steps]
 
       array[step.nummer - 1].text = input
-
-      setSteps(array)
-    } else if (e.target.name === "image") {
-      let input = e.target.value
-      let array = [...steps]
-
-      array[step.nummer - 1].image = input
 
       setSteps(array)
     }
@@ -270,6 +267,10 @@ function Baukasten() {
     }
   }
 
+  const createImageUrl = (e, index) => {
+    URL.createObjectURL(steps[index].image)
+  }
+
   return (
     <div className="flex bg-[url('/media/cuttingBoardBackground.jpg')] bg-contain">
       <div className="absolute text-black">
@@ -278,7 +279,10 @@ function Baukasten() {
         ))}
       </div>
       <div className="flex w-full md:w-5/6 2xl:w-4/6 m-auto">
-        <form action="" className="w-full flex flex-col mt-10 items-center">
+        <form
+          onSubmit={handleSubmit}
+          className="w-full flex flex-col mt-10 items-center"
+        >
           <div
             id="rezeptName-input-div"
             className="w-5/6 mb-10 items-center flex flex-row justify-center bg-opacity-90 bg-dark-blue border border-bright-orange rounded-3xl"
@@ -613,7 +617,7 @@ function Baukasten() {
                     </div>
                   </div>
                   <div className="flex flex-row items-center justify-center w-2/6">
-                    {steps[index]?.image ? (
+                    {steps[index].imageFile ? (
                       <div className="items-center justify-center flex w-full">
                         <div className="items-center flex w-full justify-center h-full">
                           <button
@@ -627,7 +631,7 @@ function Baukasten() {
                           <img
                             className="w-24 h-24 absolute z-1 rounded-md"
                             alt="not found"
-                            src={URL.createObjectURL(steps[index].image)}
+                            src={URL.createObjectURL(steps[index].imageFile)}
                           />
                         </div>
                       </div>
@@ -651,6 +655,7 @@ function Baukasten() {
                             id={`stepImage-input ${step.nummer}`}
                             type="file"
                             className="bg-bright-orange hidden"
+                            accept="image/png, image/jpeg, image/jpg, image/gif"
                             onChange={(event) => {
                               addStepImage(event, index)
                             }}
@@ -698,6 +703,7 @@ function Baukasten() {
             </div>
 
             <div className="">
+              {console.log(selectedImage)}
               {selectedImage ? (
                 <div className="max-h-[260px] w-full items-center justify-center flex">
                   <button
@@ -794,9 +800,6 @@ function Baukasten() {
               <button
                 disabled={status === "submitted" ? true : false}
                 type="submit"
-                onClick={(e) => {
-                  handleSubmit(e)
-                }}
                 className="relative items-center disabled:bg-gray-400 disabled:cursor-default cursor-pointer w-60 flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-bright-orange hover:bg-orange-700 duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bright-orange"
               >
                 {status === "unsubmitted" ? (
