@@ -25,6 +25,20 @@ module.exports = {
         "dark-green": "#03493d",
         "slime-green": "#324903",
       },
+      animation: {
+        "open-mobile-menu": "open-mobile-menu 0.3s ease-in-out forwards",
+        "close-mobile-menu": "close-mobile-menu 0.3s ease-in-out forwards",
+      },
+      keyframes: {
+        "open-mobile-menu": {
+          "0%": { transform: "scalex(0)", opacity: 0 },
+          "100%": { transform: "scalex(1)", opacity: 100 },
+        },
+        "close-mobile-menu": {
+          "0%": { transform: "scalex(1)", opacity: 100 },
+          "100%": { transform: "scalex(0)", opacity: 0 },
+        },
+      },
     },
   },
   plugins: [],

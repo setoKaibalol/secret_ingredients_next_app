@@ -62,15 +62,15 @@ export default function Recipe(props) {
   }, [])
 
   return (
-    <div className="w-full flex flex-col justify-center items-center p-5">
-      <div className="mb-10">
+    <div className="w-full flex flex-col justify-center items-center p-5 space-y-5">
+      <div className="w-5/6 items-center mt-6 flex flex-col px-20 py-2 space-y-2 justify-center bg-opacity-90 bg-dark-blue border border-bright-orange rounded-3xl">
         <h1 className="font-medium text-5xl text-sand-white underline">
           {recipe.name}
         </h1>
         <p className="text-gray-300 font-light text-lg">by {author.name}</p>
       </div>
 
-      <div className="w-5/6  min-h-screen flex-col flex justify-between">
+      <div className="w-5/6 min-h-screen flex-col flex justify-between p-4 bg-opacity-90 bg-dark-blue border border-bright-orange rounded-3xl">
         <section className="w-full flex flex-row h-[74vh]">
           <div className="flex flex-col w-4/6">
             <div className="w-full h-8 text-lg text-gray-300 font-light">
@@ -192,55 +192,51 @@ export default function Recipe(props) {
           </div>
         </section>
         <section className="w-full flex flex-row mt-20 gap-x-20">
-          <div className="w-3/6 shadow-xl rounded-xl p-8">
-            <Disclosure>
-              {({ open }) => (
-                <>
-                  <Disclosure.Button className="w-full flex flex-row justify-center items-center space-x-4 font-medium bg-dark-blue hover:bg-dark-blue-1 duration-200 bg-opacity-40 p-2 rounded-full">
-                    <span className="text-sand-white text-xl">Kommentare</span>
-                    <BsChevronUp
-                      className={`${
-                        open ? "rotate-180 transform" : ""
-                      } h-7 w-7 text-bright-orange duration-200`}
-                    />
-                  </Disclosure.Button>
-                  <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
-                    {kommentare.length < 1
-                      ? "Sei der erste!"
-                      : kommentare
-                          .slice(0, 5)
-                          .map((kommentar, index) => <div>{kommentar}</div>)}
-                  </Disclosure.Panel>
-                </>
-              )}
-            </Disclosure>
-            <div className="flex mx-auto items-center justify-center mb-4 w-full px-1">
-              <form className="w-full rounded-lg px-4 pt-2">
-                <div className="flex flex-wrap -mx-3 mb-6" />
-
-                <div className="w-full md:w-full px-3 mb-2 mt-2">
-                  <textarea
-                    className="bg-gray-100 rounded border border-gray-400 resize-none w-full h-20 py-2 px-3 placeholder-gray-700 focus:outline-none focus:bg-white"
-                    name="body"
-                    placeholder="Schreib deinen Kommentar..."
-                    required
-                  ></textarea>
-                </div>
-                <div className="w-full md:w-full flex items-start px-3">
-                  <div className="-mr-1">
-                    <button className="w-full flex justify-center ">
-                      post
-                    </button>
-                  </div>
-                </div>
-              </form>
+          <div className="w-4/6 shadow-xl p-8 rounded-xl">
+            <div className="w-full pb-4  justify-center flex">
+              <h2 className="font-medium text-sand-white text-xl underline">
+                Schritte:
+              </h2>
             </div>
+            <section className="">
+              <ul>
+                {steps.map((step, index) => (
+                  <li
+                    className="w-full flex justify-start shadow-xl mt-20 p-8"
+                    key={index}
+                  >
+                    <div className="w-[70%] flex flex-row">
+                      <div className="w-1/6 h-full">
+                        <p className="text-2xl font-medium text-sand-white">
+                          {step.nummer}.
+                        </p>
+                      </div>
+                      <div id="step-text" className="w-3/6">
+                        <p className="text-2xl font-medium text-sand-white">
+                          {step.text}
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      id="step-image"
+                      className="w-[30%] rounded-lg border relative h-40"
+                    >
+                      <Image
+                        className="rounded-lg"
+                        src={step.image}
+                        layout="fill"
+                      ></Image>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
           </div>
-          <div className="w-3/6 shadow-xl p-8 rounded-xl">
+          <div className="w-2/6 shadow-xl h-auto p-8 rounded-xl">
             <div className="w-full h-20 mb-20">
               <div className="w-full pb-4  justify-center flex">
                 <h2 className="font-medium text-sand-white text-xl underline">
-                  Zutaten:
+                  Zutatenliste:
                 </h2>
               </div>
 
@@ -266,25 +262,48 @@ export default function Recipe(props) {
             </div>
           </div>
         </section>
+        <div className="w-fullshadow-xl rounded-xl p-8">
+          <Disclosure>
+            {({ open }) => (
+              <>
+                <Disclosure.Button className="w-full flex flex-row justify-center items-center space-x-4 font-medium bg-dark-blue hover:bg-dark-blue-1 duration-200 bg-opacity-40 p-2 rounded-full">
+                  <span className="text-sand-white text-xl">Kommentare</span>
+                  <BsChevronUp
+                    className={`${
+                      !open ? "rotate-180 transform" : ""
+                    } h-7 w-7 text-bright-orange duration-200`}
+                  />
+                </Disclosure.Button>
+                <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
+                  {kommentare.length < 1
+                    ? "Sei der erste!"
+                    : kommentare
+                        .slice(0, 5)
+                        .map((kommentar, index) => <div>{kommentar}</div>)}
+                </Disclosure.Panel>
+              </>
+            )}
+          </Disclosure>
+          <div className="flex mx-auto items-center justify-center mb-4 w-full px-1">
+            <form className="w-full rounded-lg px-4 pt-2">
+              <div className="flex flex-wrap -mx-3 mb-6" />
 
-        <div className="justify-center flex w-full mt-20">
-          <h3 className="text-4xl text-sand-white underline font-medium">
-            Schritte:
-          </h3>
-        </div>
-
-        <section className="w-full flex justify-center shadow-xl mt-20">
-          <div className="w-full p-8 ">
-            <ul>
-              {steps.map((step, index) => (
-                <li key={index}>
-                  {step.text}
-                  <Image src={step.image} width="20" height={20}></Image>
-                </li>
-              ))}
-            </ul>
+              <div className="w-full md:w-full px-3 mb-2 mt-2">
+                <textarea
+                  className="bg-gray-100 rounded border border-gray-400 resize-none w-full h-20 py-2 px-3 placeholder-gray-700 focus:outline-none focus:bg-white"
+                  name="body"
+                  placeholder="Schreib deinen Kommentar..."
+                  required
+                ></textarea>
+              </div>
+              <div className="w-full md:w-full flex items-start px-3">
+                <div className="-mr-1">
+                  <button className="w-full flex justify-center ">post</button>
+                </div>
+              </div>
+            </form>
           </div>
-        </section>
+        </div>
       </div>
     </div>
   )

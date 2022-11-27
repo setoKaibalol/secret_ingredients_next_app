@@ -14,6 +14,8 @@ import {
 import { useSession } from "next-auth/react"
 import MoonLoader from "react-spinners/MoonLoader"
 import { BsCheckLg } from "react-icons/bs"
+import { AiFillYoutube, AiFillInstagram } from "react-icons/ai"
+import { GiChefToque } from "react-icons/gi"
 
 function Baukasten() {
   const { data: session } = useSession()
@@ -40,7 +42,9 @@ function Baukasten() {
     schwierigkeitsgrad: "Einfach",
     kategorie: "Vegetarisch",
     utensilien: "",
-    quellen: "",
+    youtube: "",
+    instagram: "",
+    chefkoch: "",
     image: "",
     steps: [],
     zutaten: [],
@@ -48,6 +52,24 @@ function Baukasten() {
 
   const [selectedImage, setSelectedImage] = useState(null)
   const [displayRecipes, setDisplayRecipes] = useState([])
+  const [kategorien, setKategorien] = useState([])
+
+  useEffect(() => {
+    fetch("/api/rezepte/kategorien-get", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        call: "kategorien-get",
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setKategorien(data)
+      })
+      .catch((err) => {
+        alert(err)
+      })
+  }, [])
 
   useEffect(() => {
     if (session) {
@@ -267,17 +289,8 @@ function Baukasten() {
     }
   }
 
-  const createImageUrl = (e, index) => {
-    URL.createObjectURL(steps[index].image)
-  }
-
   return (
     <div className="flex bg-[url('/media/cuttingBoardBackground.jpg')] bg-contain">
-      <div className="absolute text-black">
-        {displayRecipes.map((recipe, index) => (
-          <div key={index}> {recipe.recipeName}</div>
-        ))}
-      </div>
       <div className="flex w-full md:w-5/6 2xl:w-4/6 m-auto">
         <form
           onSubmit={handleSubmit}
@@ -544,8 +557,9 @@ function Baukasten() {
                     value={recipe.kategorie}
                     onChange={(e) => handleChange(e)}
                   >
-                    <option>Vegetarisch</option>
-                    <option>Vegan</option>
+                    {kategorien.map((kategorie, index) => (
+                      <option key={index}>{kategorie?.name}</option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -568,16 +582,59 @@ function Baukasten() {
                 </div>
                 <div className="flex flex-row w-full space-x-6">
                   <label htmlFor="quellen" className="text-white text-lg w-2/6">
-                    Social media Links zu deinem Rezept(optional):
+                    Social Media Links(optional):
                   </label>
-                  <textarea
-                    className="mb-5 bg-white appearance-none rounded-3xl relative block w-4/6 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
-                    id="quellen"
-                    name="quellen"
-                    placeholder="..."
-                    value={recipe.quellen}
-                    onChange={(e) => handleChange(e)}
-                  ></textarea>
+                  <div className="flex flex-row items-center">
+                    <label
+                      htmlFor="instagram"
+                      className="text-white text-lg w-2/6"
+                    >
+                      <AiFillInstagram className="text-purple-600 w-12 h-12"></AiFillInstagram>
+                    </label>
+                    <input
+                      className="bg-white rounded-md max-h-10 w-40 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10 "
+                      id="instagram"
+                      name="instagram"
+                      type="text"
+                      placeholder="Instagram"
+                      value={recipe.instagram}
+                      onChange={(e) => handleChange(e)}
+                    ></input>
+                  </div>
+                  <div className="flex flex-row items-center">
+                    <label
+                      htmlFor="youtube"
+                      className="text-white text-lg w-2/6"
+                    >
+                      <AiFillYoutube className="text-red-600 w-12 h-12"></AiFillYoutube>
+                    </label>
+                    <input
+                      className="bg-white rounded-md max-h-10 w-40 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10 "
+                      id="youtube"
+                      name="youtube"
+                      type="text"
+                      placeholder="Youtube"
+                      value={recipe.youtube}
+                      onChange={(e) => handleChange(e)}
+                    ></input>
+                  </div>
+                  <div className="flex flex-row items-center">
+                    <label
+                      htmlFor="chefkoch"
+                      className="text-white text-lg w-2/6"
+                    >
+                      <GiChefToque className="text-green-800 w-12 h-12"></GiChefToque>
+                    </label>
+                    <input
+                      className="bg-white rounded-md max-h-10 w-40 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10 "
+                      id="chefkoch"
+                      name="chefkoch"
+                      type="text"
+                      placeholder="Chefkoch"
+                      value={recipe.chefkoch}
+                      onChange={(e) => handleChange(e)}
+                    ></input>
+                  </div>
                 </div>
               </div>
             </div>

@@ -152,104 +152,109 @@ function GrundRezepte() {
         ref={accordionComponent}
         open={openAccordion === 1}
       >
-        <AccordionBody>
-          <div className="flex justify-between py-10">
-            <div className="w-full flex flex-col">
-              <div className="w-full text-center">
-                <p className="px-10 font-medium text-2xl text-sand-white pb-4">
-                  Einfache unveränderte Grundrezepte
-                </p>
+        <AccordionBody className="pb-0">
+          <div className="flex flex-col z-10 bg-[url('/media/cuttingBoardBackground.jpg')]">
+            <div className="flex relative justify-between z-20 bg-dark-blue-1 py-4 border-b-2 border-b-bright-orange">
+              <div className="w-full flex flex-col">
+                <div className="w-full text-center">
+                  <p className="flex md:hidden px-10 font-medium text-2xl text-sand-white pb-4">
+                    Grundrezepte
+                  </p>
+                  <p className="hidden md:flex px-10 font-medium text-2xl text-sand-white pb-4">
+                    Einfache unveränderte Grundrezepte
+                  </p>
+                </div>
               </div>
-            </div>
-            <button
-              className="text-bright-orange h-14 w-14 mr-2 rounded-full items-center justify-center flex m-auto"
-              onClick={() => closeAccordion()}
-            >
-              <XCircleIcon className="h-12 hover:h-11"></XCircleIcon>
-            </button>
-          </div>
-          <div className="w-full flex flex-row md:mr-12 lg:mr-28 bg-[url('/media/cuttingBoardBackground.jpg')] bg-cover h-auto min-h-screen pb-20">
-            <div className="w-1/6 h-auto bg-white bg-opacity-80 text-black text-lg font-medium p-4">
-              <div
-                id="kategorien"
-                className="p-4 text-black text-lg font-medium"
+              <button
+                className="text-bright-orange h-14 w-14 mr-2 rounded-full items-center justify-center flex m-auto"
+                onClick={() => closeAccordion()}
               >
-                <div>
-                  <h3>Kategorien: </h3>
-                  <ul className="px-4 font-normal">
-                    <li className="space-x-1 items-center flex">
-                      <input id="input-1" type="checkbox" />
-                      <label htmlFor="input-1">Vegan</label>
-                    </li>
-                    <li className="space-x-1 items-center flex">
-                      <input id="input-1" type="checkbox" />
-                      <label htmlFor="input-1">Vegetarisch</label>
-                    </li>
-                    <li className="space-x-1 items-center flex">
-                      <input id="input-1" type="checkbox" />
-                      <label htmlFor="input-1">Heiß</label>
-                    </li>
-                    <li className="space-x-1 items-center flex">
-                      <input id="input-1" type="checkbox" />
-                      <label htmlFor="input-1">Kalt</label>
-                    </li>
-                    <li className="space-x-1 items-center flex">
-                      <input id="input-1" type="checkbox" />
-                      <label htmlFor="input-1">Hack</label>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div id="kochzeit" className="p-4">
-                <h3>Kochzeit:</h3>
-
-                <input
-                  id="minmax-range"
-                  type="range"
-                  min="1"
-                  max="10"
-                  onChange={(e) => handleChange(e)}
-                  value={kochzeit}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
-                />
-                <div className="w-full h-2">
-                  <p></p>
-                  <p></p>
-                  <p></p>
-                  <p></p>
-                  <p></p>
-                </div>
-              </div>
-              <div id="kochzeit" className="p-4 mb-20">
-                <h3>Schwierigkeitsgrad:</h3>
-
-                <select className="rounded-md">
-                  <option>bitte wählen...</option>
-                  <option>Einfach</option>
-                  <option>Schwierig</option>
-                  <option>Mittel</option>
-                  <option>Meisterkoch</option>
-                </select>
-              </div>
-
-              <div className="flex w-full items-center justify-center pt-10">
-                <button className="border-2 w-full text-white text-lg border-bright-orange rounded-lg p-2 bg-dark-blue">
-                  Anwenden
-                </button>
-              </div>
+                <XCircleIcon className="h-12 hover:h-11"></XCircleIcon>
+              </button>
             </div>
-            <div className="border-l w-5/6 border-black">
-              <div className="flex flex-wrap w-full gap-x-8 gap-y-10 translate-y-10 justify-center ">
-                {recipes?.map((item, index) => (
-                  <div key={index}>
-                    <RezeptComponent
-                      item={item}
-                      index={index}
-                      reloadRecipes={reloadRecipes}
-                      setReloadRecipes={setReloadRecipes}
-                    />
+            <div className="w-full flex flex-row md:mr-12 lg:mr-28 bg-[url('/media/cuttingBoardBackground.jpg')] bg-cover">
+              <div className="w-2/6 md:w-1/6 bg-white bg-opacity-80 text-black text-lg font-medium p-4">
+                <div
+                  id="kategorien"
+                  className="md:p-4 text-black text-lg font-medium"
+                >
+                  <div>
+                    <h3>Kategorien: </h3>
+                    <ul className="px-4 font-normal">
+                      <li className="space-x-1 items-center flex">
+                        <input id="input-1" type="checkbox" />
+                        <label htmlFor="input-1">Vegan</label>
+                      </li>
+                      <li className="space-x-1 items-center flex">
+                        <input id="input-1" type="checkbox" />
+                        <label htmlFor="input-1">Vegetarisch</label>
+                      </li>
+                      <li className="space-x-1 items-center flex">
+                        <input id="input-1" type="checkbox" />
+                        <label htmlFor="input-1">Heiß</label>
+                      </li>
+                      <li className="space-x-1 items-center flex">
+                        <input id="input-1" type="checkbox" />
+                        <label htmlFor="input-1">Kalt</label>
+                      </li>
+                      <li className="space-x-1 items-center flex">
+                        <input id="input-1" type="checkbox" />
+                        <label htmlFor="input-1">Hack</label>
+                      </li>
+                    </ul>
                   </div>
-                ))}
+                </div>
+                <div id="kochzeit" className="p-4">
+                  <h3>Kochzeit:</h3>
+
+                  <input
+                    id="minmax-range"
+                    type="range"
+                    min="1"
+                    max="10"
+                    onChange={(e) => handleChange(e)}
+                    value={kochzeit}
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                  />
+                  <div className="w-full h-2">
+                    <p></p>
+                    <p></p>
+                    <p></p>
+                    <p></p>
+                    <p></p>
+                  </div>
+                </div>
+                <div id="kochzeit" className="p-4 mb-20">
+                  <h3>Schwierigkeitsgrad:</h3>
+
+                  <select className="rounded-md">
+                    <option>bitte wählen...</option>
+                    <option>Einfach</option>
+                    <option>Schwierig</option>
+                    <option>Mittel</option>
+                    <option>Meisterkoch</option>
+                  </select>
+                </div>
+
+                <div className="flex w-full items-center justify-center pt-10">
+                  <button className="border-2 w-full text-white text-lg border-bright-orange rounded-lg p-2 bg-dark-blue">
+                    Anwenden
+                  </button>
+                </div>
+              </div>
+              <div className="border-l w-5/6 border-black h-max">
+                <div className="flex flex-wrap w-ful h-auto gap-x-8 gap-y-10 translate-y-10 justify-center ">
+                  {recipes.map((item, index) => (
+                    <div key={index}>
+                      <RezeptComponent
+                        item={item}
+                        index={index}
+                        reloadRecipes={reloadRecipes}
+                        setReloadRecipes={setReloadRecipes}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

@@ -33,7 +33,7 @@ function RezeptComponent({ item, index, reloadRecipes, setReloadRecipes }) {
   return (
     <div
       id="rezept-card"
-      className="h-[540px] w-5/6 md:w-[350px] flex flex-col shadow-lg shadow-black border-black border items-center rounded-lg group bg-dark-blue bg-opacity-90"
+      className="h-full w-5/6 md:w-[350px] flex flex-col shadow-lg shadow-black border-black border items-center rounded-lg group bg-dark-blue bg-opacity-90"
     >
       {session ? (
         <div className="w-full flex justify-end">
