@@ -13,7 +13,7 @@ export default function Header() {
   const navigation = session
     ? [
         {
-          name: "Klassische Rezepte",
+          name: "Grundrezepte",
           to: "/de/grundrezepte",
         },
         {
@@ -107,10 +107,10 @@ export default function Header() {
           </div>
           <div
             id="mobile-logo"
-            className="flex md:hidden w-[20%] py-1 justify-center"
+            className="flex md:hidden w-[20%] py-1 pt-4 justify-center"
           >
             <Link passHref href="/">
-              <a className="relative w-[56px] h-[70px]">
+              <a className="relative w-[44px] h-[55px]">
                 <Image
                   src="/media/logo/Buch.png"
                   alt="logo-mobile"

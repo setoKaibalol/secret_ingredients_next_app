@@ -7,10 +7,14 @@ import Footer from "../Components/Footer"
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   const [rezepte, setRezepte] = useState([])
+  const [user, setUser] = useState([])
+  const [kategorien, setKategorien] = useState([])
 
   return (
     <>
-      <AppContext.Provider value={[rezepte, setRezepte]}>
+      <AppContext.Provider
+        value={[rezepte, setRezepte, user, setUser, kategorien, setKategorien]}
+      >
         <SessionProvider session={session}>
           <Navbar />
           <Component {...pageProps} />

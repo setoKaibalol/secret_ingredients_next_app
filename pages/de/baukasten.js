@@ -627,11 +627,11 @@ function Baukasten() {
                     </label>
                     <input
                       className="bg-white rounded-md max-h-10 w-40 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10 "
-                      id="chefkoch"
-                      name="chefkoch"
+                      id="tiktok"
+                      name="tiktok"
                       type="text"
-                      placeholder="Chefkoch"
-                      value={recipe.chefkoch}
+                      placeholder="TikTok"
+                      value={recipe.tiktok}
                       onChange={(e) => handleChange(e)}
                     ></input>
                   </div>

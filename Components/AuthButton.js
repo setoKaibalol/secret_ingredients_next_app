@@ -9,11 +9,21 @@ import MoonLoader from "react-spinners/MoonLoader"
 import { BiLogInCircle } from "react-icons/bi"
 import { BsPersonCircle } from "react-icons/bs"
 import BeatLoader from "react-spinners/BeatLoader"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const AuthButton = () => {
   const { data: session, status } = useSession()
   const [userMenuOpen, setUserMenuOpen] = useState(false)
+
+  useEffect(() => {
+    console.log(
+      session?.user?.email === "l.vogel@autofreizeit.de" ||
+        session?.user?.email === "lukasjv6@gmail.com" ||
+        session?.user?.email === "nicksecretingredients@gmail.com"
+        ? "hi"
+        : "no"
+    )
+  }, [session])
 
   return status === "authenticated" ? (
     <div
@@ -32,9 +42,9 @@ const AuthButton = () => {
             <div className="w-52 border-black border space-y-2 p-4 bg-white">
               <div>Account</div>
               <div>Einstellungen</div>
-              {session?.user?.email === "lukasjv6@gmail.com" ||
-              "a.schmiedeberg@autofreizeit.de" ||
-              "l.vogel@autofreizeit.de" ? (
+              {session?.user?.email === "l.vogel@autofreizeit.de" ||
+              session?.user?.email === "lukasjv6@gmail.com" ||
+              session?.user?.email === "nicksecretingredients@gmail.com" ? (
                 <div>
                   <Link href="/admin/dashboard">
                     <button

@@ -62,7 +62,7 @@ export default function Recipe(props) {
   }, [])
 
   return (
-    <div className="w-full flex flex-col justify-center items-center p-5 space-y-5">
+    <div className="w-full flex flex-col justify-center items-center p-5 space-y-5 bg-gray-400 bg-[url('/media/cuttingBoardBackground.jpg')] bg-contain">
       <div className="w-5/6 items-center mt-6 flex flex-col px-20 py-2 space-y-2 justify-center bg-opacity-90 bg-dark-blue border border-bright-orange rounded-3xl">
         <h1 className="font-medium text-5xl text-sand-white underline">
           {recipe.name}
@@ -71,7 +71,7 @@ export default function Recipe(props) {
       </div>
 
       <div className="w-5/6 min-h-screen flex-col flex justify-between p-4 bg-opacity-90 bg-dark-blue border border-bright-orange rounded-3xl">
-        <section className="w-full flex flex-row h-[74vh]">
+        <section className="w-full flex flex-row h-[66vh]">
           <div className="flex flex-col w-4/6">
             <div className="w-full h-8 text-lg text-gray-300 font-light">
               Rezepte / {kategorie.name}
@@ -99,7 +99,7 @@ export default function Recipe(props) {
               </div>
             </div>
           </div>
-          <div className="w-2/6 min-h-[450px] flex flex-col justify-between mt-20">
+          <div className="w-2/6 min-h-[430px] flex flex-col justify-between mt-20">
             <div className="flex flex-col space-y-20">
               <div className="flex flex-row justify-evenly">
                 <div className="flex items-center flex-col">
@@ -192,11 +192,9 @@ export default function Recipe(props) {
           </div>
         </section>
         <section className="w-full flex flex-row mt-20 gap-x-20">
-          <div className="w-4/6 shadow-xl p-8 rounded-xl">
+          <div className="w-3/6 shadow-xl p-8 rounded-xl">
             <div className="w-full pb-4  justify-center flex">
-              <h2 className="font-medium text-sand-white text-xl underline">
-                Schritte:
-              </h2>
+              <h2 className="font-bold text-sand-white text-3xl ">Schritte:</h2>
             </div>
             <section className="">
               <ul>
@@ -232,15 +230,15 @@ export default function Recipe(props) {
               </ul>
             </section>
           </div>
-          <div className="w-2/6 shadow-xl h-auto p-8 rounded-xl">
+          <div className="w-3/6 shadow-xl h-auto p-8 rounded-xl">
             <div className="w-full h-20 mb-20">
               <div className="w-full pb-4  justify-center flex">
-                <h2 className="font-medium text-sand-white text-xl underline">
+                <h2 className=" font-bold text-sand-white text-3xl ">
                   Zutatenliste:
                 </h2>
               </div>
 
-              <ul className="list-disc divide-bright-orange text-sand-white space-y-2 text-xl divide-y-2">
+              <ul className="list-disc divide-bright-orange text-black p-8 space-y-2 text-xl rounded-sm bg-cover bg-[url('https://img.freepik.com/fotos-premium/notizbuch-liniertes-papier-textur-hintergrund_35652-1381.jpg?w=2000')]">
                 <div className="flex flex-row justify-between">
                   <p className="w-1/3">Zutat:</p>
                   <p className="w-1/3">Menge:</p>
