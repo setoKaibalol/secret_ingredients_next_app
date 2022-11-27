@@ -279,7 +279,9 @@ export default function Recipe(props) {
                     ? "Sei der erste!"
                     : kommentare
                         .slice(0, 5)
-                        .map((kommentar, index) => <div>{kommentar}</div>)}
+                        .map((kommentar, index) => (
+                          <div key={index}>{kommentar}</div>
+                        ))}
                 </Disclosure.Panel>
               </>
             )}
