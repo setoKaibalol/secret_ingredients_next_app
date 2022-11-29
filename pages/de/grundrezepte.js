@@ -243,7 +243,7 @@ function GrundRezepte() {
                 </div>
               </div>
               <div className="border-l w-5/6 border-black h-max">
-                <div className="flex flex-wrap w-ful h-auto gap-x-8 gap-y-10 translate-y-10 justify-center ">
+                <div className="flex flex-wrap w-full h-auto gap-x-8 gap-y-10 translate-y-10 justify-center ">
                   {recipes.map((item, index) => (
                     <div key={index}>
                       <RezeptComponent
