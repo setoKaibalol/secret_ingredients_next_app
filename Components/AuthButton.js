@@ -85,7 +85,7 @@ const AuthButton = () => {
   ) : status === "loading" ? (
     <>
       <button
-        className=""
+        className="hidden md:flex"
         onClick={() => signIn(undefined, { callbackUrl: "/shop" })}
       >
         <BeatLoader className="text-bright-orange"></BeatLoader>
@@ -94,7 +94,7 @@ const AuthButton = () => {
   ) : (
     <>
       <button
-        className=""
+        className="hidden md:flex"
         onClick={() => signIn(undefined, { callbackUrl: "/shop" })}
       >
         <BiLogInCircle className="text-bright-orange h-10 w-10"></BiLogInCircle>
