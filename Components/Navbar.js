@@ -58,10 +58,8 @@ export default function Header() {
       const mobileMenu = document.getElementById("mobile-menu")
       const mobileMenuLinks = document.getElementsByName("mobile-menu-links")
       const isLink = mobileMenuLinks.item(1)
-      console.log(e.target.name)
 
       if (e.target.name == "mobile-menu-links") {
-        console.log("hello")
         setToggleMobileMenu(true)
         mobileMenuButton.classList.remove("toggle-btn")
       }
@@ -177,8 +175,6 @@ export default function Header() {
                       : "px-2 py-2 hover:cursor-pointer rounded-md font-medium text-md lg:text-lg text-gray-100 md:text-gray-300 hover:bg-gray-700 hover:text-white border-2 border-transparent"
                   }
                 >
-                  {console.log(router.pathname, item.to)}
-
                   {item.name}
                 </a>
               </Link>

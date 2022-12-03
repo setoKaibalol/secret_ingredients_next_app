@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useContext } from "react"
 import axios from "axios"
 import Link from "next/link"
-import { Disclosure } from "@headlessui/react"
+import Select from "react-select"
+import makeAnimated from "react-select/animated"
 import {
   XIcon,
   PlusIcon,
@@ -15,14 +16,39 @@ import { useSession } from "next-auth/react"
 import MoonLoader from "react-spinners/MoonLoader"
 import { BsCheckLg } from "react-icons/bs"
 import { AiFillYoutube, AiFillInstagram } from "react-icons/ai"
-import { GiChefToque } from "react-icons/gi"
+import { FaTiktok } from "react-icons/fa"
+import AppContext from "../../helpers/AppContext"
+import { useRouter } from "next/router"
 
 function Baukasten() {
+  const router = useRouter()
+
+  const [rezepte, setRezepte, user, setUser, kategorien, setKategorien] =
+    useContext(AppContext)
+
+  const animatedComponents = makeAnimated()
   const { data: session } = useSession()
-  const [userId, setUserId] = useState()
 
   const [status, setStatus] = useState("unsubmitted")
   const [imgUploaded, setImgUploaded] = useState(false)
+
+  const [recipe, setRecipe] = useState({
+    userId: "",
+    name: "",
+    typ: "Grundrezept",
+    likes: 0,
+    zubereitungszeit: "5min - 20min",
+    portionen: 1,
+    schwierigkeitsgrad: "Einfach",
+    kategorien: "Vegetarisch",
+    utensilien: "",
+    youtube: "",
+    instagram: "",
+    tiktok: "",
+    image: "",
+    steps: [],
+    zutaten: [],
+  })
 
   const [steps, setSteps] = useState([
     { nummer: 1, text: "", image: "", image: "", imageFile: null },
@@ -32,27 +58,68 @@ function Baukasten() {
     { name: "", menge: "", einheit: "", kommentar: "" },
   ])
 
-  const [recipe, setRecipe] = useState({
-    userId: userId,
-    name: "",
-    typ: "Grundrezept",
-    likes: 0,
-    zubereitungszeit: "5min - 20min",
-    portionen: 1,
-    schwierigkeitsgrad: "Einfach",
-    kategorie: "Vegetarisch",
-    utensilien: "",
-    youtube: "",
-    instagram: "",
-    chefkoch: "",
-    image: "",
-    steps: [],
-    zutaten: [],
-  })
-
   const [selectedImage, setSelectedImage] = useState(null)
-  const [displayRecipes, setDisplayRecipes] = useState([])
-  const [kategorien, setKategorien] = useState([])
+
+  const kategorieSelectOptions = () => {
+    const kategorienArray = []
+
+    for (let index = 0; index < kategorien.length; index++) {
+      kategorienArray.push({
+        value: kategorien[index].name,
+        label: kategorien[index].name,
+      })
+    }
+    return kategorienArray
+  }
+
+  const zubereitungszeitSelectOptions = [
+    {
+      value: "5min - 20min",
+      label: "5min - 20min",
+    },
+    {
+      value: "20min - 45min",
+      label: "20min - 45min",
+    },
+    {
+      value: "45min - 1h 30min",
+      label: "45min - 1h 30min",
+    },
+    {
+      value: "1h 30min +",
+      label: "1h 30min +",
+    },
+  ]
+
+  const PortionsgrößeSelectOptions = [
+    { value: 1, label: 1 },
+    { value: 2, label: 2 },
+    { value: 3, label: 3 },
+    { value: 4, label: 4 },
+    { value: 5, label: 5 },
+    { value: 6, label: 6 },
+    { value: 7, label: 7 },
+    { value: 8, label: 8 },
+    { value: 9, label: 9 },
+    { value: 10, label: 10 },
+    { value: 11, label: 11 },
+    { value: 12, label: 12 },
+    { value: 13, label: 13 },
+    { value: 14, label: 14 },
+    { value: 15, label: 15 },
+    { value: 16, label: 16 },
+    { value: 17, label: 17 },
+    { value: 18, label: 18 },
+    { value: 19, label: 19 },
+    { value: 20, label: 20 },
+  ]
+
+  const schwierigkeitsgradSelectOptions = [
+    { value: "Einfach", label: "Einfach" },
+    { value: "Mittel", label: "Mittel" },
+    { value: "Schwierig", label: "Schwierig" },
+    { value: "Meisterkoch", label: "Meisterkoch" },
+  ]
 
   useEffect(() => {
     fetch("/api/rezepte/kategorien-get", {
@@ -83,7 +150,7 @@ function Baukasten() {
       })
         .then((res) => res.json())
         .then((data) => {
-          setUserId(data.id)
+          setUser(data)
           setRecipe({ ...recipe, userId: data.id })
         })
         .catch((err) => {
@@ -102,6 +169,7 @@ function Baukasten() {
         .then((res) => res.json())
         .then((data) => {
           setStatus("submitted")
+          router.push("/de/grundrezepte")
         })
         .catch((error) => {
           setStatus("unsubmitted")
@@ -291,14 +359,14 @@ function Baukasten() {
 
   return (
     <div className="flex bg-[url('/media/cuttingBoardBackground.jpg')] bg-contain">
-      <div className="flex w-full md:w-5/6 2xl:w-4/6 m-auto">
+      <div className="flex w-full md:w-[90%] 2xl:w-[80%] m-auto">
         <form
           onSubmit={handleSubmit}
           className="w-full flex flex-col mt-10 items-center"
         >
           <div
             id="rezeptName-input-div"
-            className="w-5/6 mb-10 items-center flex flex-row justify-center bg-opacity-90 bg-dark-blue border border-bright-orange rounded-3xl"
+            className="w-4/6 mb-10 items-center flex flex-row justify-center bg-opacity-90 bg-dark-blue border border-bright-orange rounded-3xl"
           >
             <div className=" w-full flex items-center flex-col justify-center p-4">
               <label
@@ -310,21 +378,23 @@ function Baukasten() {
               <input
                 id="rezeptName-input"
                 required
-                className="bg-white appearance-none rounded-full block w-3/6 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
+                className="bg-white appearance-none rounded-full block w-full lg:w-3/6 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
                 placeholder=". . ."
                 value={recipe.name}
                 name="name"
                 onChange={handleChange}
               ></input>
             </div>
-            <div className="m-4 flex flex-col">
-              <div className="w-full flex flex-col items-end">
-                <div className="flex flex-col">
+          </div>
+          {user ? (
+            user.role === "ADMIN" ? (
+              <div className="w-full mb-5 items-center flex flex-row justify-center bg-opacity-90 bg-dark-blue border border-bright-orange rounded-3xl">
+                <div className="w-full flex flex-col items-center justify-center p-4">
                   <label
                     htmlFor="recipe-type-select"
-                    className="text-white text-lg pl-4"
+                    className="text-white font-medium text-xl p-2"
                   >
-                    Rezept Typ:
+                    Rezept Typ
                   </label>
                   <select
                     required
@@ -340,8 +410,13 @@ function Baukasten() {
                   </select>
                 </div>
               </div>
-            </div>
-          </div>
+            ) : (
+              ""
+            )
+          ) : (
+            ""
+          )}
+
           <label
             htmlFor="zutaten-list"
             className="text-white font-medium text-md"
@@ -353,17 +428,17 @@ function Baukasten() {
             <div className="w-full h-full">
               <div className="h-10 flex flex-row">
                 <div className="w-1/3 flex">
-                  <div className="w-5/6 flex justify-center font-medium text-white text-2xl">
+                  <div className="w-5/6 flex justify-center font-medium text-white text-xl">
                     <h3>Zutaten</h3>
                   </div>
                 </div>
                 <div className="w-1/3">
-                  <div className="flex justify-center font-medium text-white text-2xl">
+                  <div className="flex justify-center font-medium text-white text-xl">
                     <h3>Mengeneinheiten</h3>
                   </div>
                 </div>
                 <div className="w-1/3">
-                  <div className=" flex  justify-center font-medium text-white text-2xl">
+                  <div className="flex justify-center font-medium text-white text-xl">
                     <h3>Bemerkungen</h3>
                   </div>
                 </div>
@@ -452,7 +527,7 @@ function Baukasten() {
                   )
                 })}
               </ol>
-              <div className="space-x-80 p-4 w-full flex flex-row">
+              <div className="gap-x-20 lg:gap-x-80 p-4 w-full flex flex-row">
                 <div className="flex flex-row w-3/6 justify-end space-x-2 ">
                   <button
                     type="button"
@@ -479,100 +554,171 @@ function Baukasten() {
             className="mb-5 bg-opacity-90 bg-dark-blue p-4 text-white border-2 border-bright-orange rounded-3xl flex w-full flex-col space-y-3"
           >
             <div className="w-full flex flex-col items-center justify-center py-2 space-y-10">
-              <div className="flex flex-row w-full justify-between">
-                <div className="flex flex-col w-1/3 justify-center items-center space-x-2">
+              <div className="flex flex-wrap w-full space-y-4 items-end">
+                <div className="flex flex-col w-full sm:w-1/2 xl:w-1/4 justify-start items-center space-x-2">
                   <label
                     htmlFor="zubereitungszeit"
-                    className="text-white text-lg pl-4"
+                    className="font-medium text-white text-xl p-1"
                   >
-                    Ungefähre Zubereitungszeit:
+                    Zubereitungszeit
                   </label>
-                  <select
-                    required
-                    className="text-gray-900 bg-white rounded-full focus:outline-none px-4 py-2 focus:ring-bright-orange focus:border-bright-orange focus:z-10"
+                  <Select
                     id="zubereitungszeit"
+                    instanceId={"zubereitungszeit"}
+                    required
+                    placeholder={"Wähle..."}
+                    closeMenuOnSelect={false}
+                    onChange={(choice) =>
+                      setRecipe({ ...recipe, zubereitungszeit: choice.value })
+                    }
+                    styles={{
+                      control: (baseStyles, state) => ({
+                        ...baseStyles,
+                        borderColor: state.isFocused ? "#FF8038" : "grey",
+                        "&:hover": {
+                          borderColor: "#FF8038",
+                        },
+                      }),
+                      option: (baseStyles, state) => ({
+                        ...baseStyles,
+                        color: "black",
+                        backgroundColor: state.isSelected ? "#FF8038" : "",
+                      }),
+                      container: (baseStyles, state) => ({
+                        ...baseStyles,
+                        width: "250px",
+                      }),
+                    }}
+                    options={zubereitungszeitSelectOptions}
                     name="zubereitungszeit"
-                    value={recipe.zubereitungszeit}
-                    onChange={(e) => handleChange(e)}
-                  >
-                    <option>5min - 20min</option>
-                    <option>20min - 45min</option>
-                    <option>45min - 1h 30min</option>
-                    <option>1h 30min +</option>
-                  </select>
+                  ></Select>
                 </div>
-                <div className="flex flex-col w-1/3 justify-start items-center space-x-2">
+                <div className="flex flex-col w-full sm:w-1/2 xl:w-1/4 justify-start items-center space-x-2">
                   <label
                     htmlFor="portionen"
-                    className="text-white text-lg pl-4"
+                    className="font-medium text-white text-xl p-1"
                   >
-                    Portionsgröße:
+                    Portionsgröße
                   </label>
-                  <div className="flex-row flex items-center p-1 space-x-1">
-                    <input
-                      required
-                      className="appearance-none bg-white rounded-full max-h-10 relative block w-20 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10 "
-                      id="portionen"
-                      name="portionen"
-                      type="number"
-                      placeholder="1"
-                      value={recipe.portionen}
-                      onChange={(e) => handleChange(e)}
-                    ></input>
-                  </div>
+                  <Select
+                    id="portionen"
+                    required
+                    instanceId={"portionen"}
+                    placeholder={"Wähle..."}
+                    closeMenuOnSelect={false}
+                    onChange={(choice) =>
+                      setRecipe({ ...recipe, portionen: choice.value })
+                    }
+                    styles={{
+                      control: (baseStyles, state) => ({
+                        ...baseStyles,
+                        borderColor: state.isFocused ? "#FF8038" : "grey",
+                        "&:hover": {
+                          borderColor: "#FF8038",
+                        },
+                      }),
+                      option: (baseStyles, state) => ({
+                        ...baseStyles,
+                        color: "black",
+                        backgroundColor: state.isSelected ? "#FF8038" : "",
+                      }),
+                      container: (baseStyles, state) => ({
+                        ...baseStyles,
+                        width: "250px",
+                      }),
+                    }}
+                    options={PortionsgrößeSelectOptions}
+                    name="portionen"
+                  ></Select>
                 </div>
-                <div className="flex flex-col w-1/3 justify-start items-center space-x-2">
+                <div className="flex flex-col w-full sm:w-1/2 xl:w-1/4 justify-start items-center space-x-2">
                   <label
                     htmlFor="schwierigkeitsgrad"
-                    className="text-white text-lg pl-4"
+                    className="font-medium text-white text-xl p-1"
                   >
-                    Schwierigkeitsgrad:
+                    Schwierigkeitsgrad
                   </label>
-                  <select
-                    required
-                    className="text-gray-900 bg-white rounded-full focus:outline-none px-4 py-2 focus:ring-bright-orange focus:border-bright-orange focus:z-10"
+                  <Select
                     id="schwierigkeitsgrad"
+                    instanceId={"schwierigkeitsgrad"}
+                    required
+                    placeholder={"Wähle..."}
+                    closeMenuOnSelect={false}
+                    onChange={(choice) =>
+                      setRecipe({ ...recipe, schwierigkeitsgrad: choice.value })
+                    }
+                    styles={{
+                      control: (baseStyles, state) => ({
+                        ...baseStyles,
+                        borderColor: state.isFocused ? "#FF8038" : "grey",
+                        "&:hover": {
+                          borderColor: "#FF8038",
+                        },
+                      }),
+                      option: (baseStyles, state) => ({
+                        ...baseStyles,
+                        color: "black",
+                        backgroundColor: state.isSelected ? "#FF8038" : "",
+                      }),
+                      container: (baseStyles, state) => ({
+                        ...baseStyles,
+                        width: "250px",
+                      }),
+                    }}
+                    options={schwierigkeitsgradSelectOptions}
                     name="schwierigkeitsgrad"
-                    value={recipe.schwierigkeitsgrad}
-                    onChange={(e) => handleChange(e)}
-                  >
-                    <option>Einfach</option>
-                    <option>Mittel</option>
-                    <option>Schwierig</option>
-                    <option>Meisterkoch</option>
-                  </select>
+                  ></Select>{" "}
                 </div>
-                <div className="flex flex-col w-1/3 justify-start items-center space-x-2">
+                <div className="flex flex-col w-full sm:w-1/2 xl:w-1/4 justify-start items-center space-x-2">
                   <label
                     htmlFor="kategorie"
-                    className="text-white text-lg pl-4"
+                    className="font-medium text-white text-xl p-1"
                   >
-                    Kategorie:
+                    Kategorien
                   </label>
-                  <select
+                  <Select
                     required
-                    className="text-gray-900 bg-white rounded-full focus:outline-none px-4 py-2 focus:ring-bright-orange focus:border-bright-orange focus:z-10"
-                    id="kategorie"
+                    instanceId={"kategorie"}
+                    placeholder={"Wähle..."}
+                    closeMenuOnSelect={false}
+                    components={animatedComponents}
+                    isMulti
+                    onChange={(choice) => {
+                      setRecipe({ ...recipe, kategorien: choice })
+                    }}
+                    styles={{
+                      control: (baseStyles, state) => ({
+                        ...baseStyles,
+                        borderColor: state.isFocused ? "#FF8038" : "grey",
+                        "&:hover": {
+                          borderColor: "#FF8038",
+                        },
+                      }),
+                      option: (baseStyles, state) => ({
+                        ...baseStyles,
+                        color: "black",
+                        backgroundColor: state.isSelected ? "#FF8038" : "",
+                      }),
+                      container: (baseStyles, state) => ({
+                        ...baseStyles,
+                        width: "250px",
+                      }),
+                    }}
+                    options={kategorieSelectOptions()}
                     name="kategorie"
-                    value={recipe.kategorie}
-                    onChange={(e) => handleChange(e)}
-                  >
-                    {kategorien.map((kategorie, index) => (
-                      <option key={index}>{kategorie?.name}</option>
-                    ))}
-                  </select>
+                  ></Select>
                 </div>
               </div>
               <div className="flex flex-col w-full space-y-5 p-2">
-                <div className="flex flex-row w-full space-x-6">
+                <div className="flex flex-col lg:flex-row w-full space-x-6 justify-center">
                   <label
                     htmlFor="wichtigeUtensilien"
-                    className="text-white text-lg w-2/6"
+                    className="font-medium text-center lg:text-start text-white text-xl w-full lg:w-2/6 p-1"
                   >
-                    Küchenutensilien(optional):
+                    Küchenutensilien(optional)
                   </label>
                   <textarea
-                    className="mb-5 bg-white appearance-none rounded-3xl relative block w-4/6 self-end px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
+                    className="mb-5 bg-white m-1 appearance-none rounded-3xl relative block w-full lg:w-4/6 self-end px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
                     id="wichtigeUtensilien"
                     name="utensilien"
                     value={recipe.utensilien}
@@ -580,14 +726,17 @@ function Baukasten() {
                     placeholder="..."
                   ></textarea>
                 </div>
-                <div className="flex flex-row w-full space-x-6">
-                  <label htmlFor="quellen" className="text-white text-lg w-2/6">
-                    Social Media Links(optional):
+                <div className="flex flex-wrap w-full gap-x-6 xl:justify-start justify-center">
+                  <label
+                    htmlFor="quellen"
+                    className="font-medium text-center xl:text-start text-white text-xl w-full xl:w-2/6 p-1"
+                  >
+                    Social Media Links(optional)
                   </label>
-                  <div className="flex flex-row items-center">
+                  <div className="flex flex-row items-center ">
                     <label
                       htmlFor="instagram"
-                      className="text-white text-lg w-2/6"
+                      className="text-white text-lg p-1"
                     >
                       <AiFillInstagram className="text-purple-600 w-12 h-12"></AiFillInstagram>
                     </label>
@@ -596,7 +745,7 @@ function Baukasten() {
                       id="instagram"
                       name="instagram"
                       type="text"
-                      placeholder="Instagram"
+                      placeholder="Instagram Link"
                       value={recipe.instagram}
                       onChange={(e) => handleChange(e)}
                     ></input>
@@ -604,7 +753,7 @@ function Baukasten() {
                   <div className="flex flex-row items-center">
                     <label
                       htmlFor="youtube"
-                      className="text-white text-lg w-2/6"
+                      className="text-white text-lg w-2/6 p-1"
                     >
                       <AiFillYoutube className="text-red-600 w-12 h-12"></AiFillYoutube>
                     </label>
@@ -613,24 +762,24 @@ function Baukasten() {
                       id="youtube"
                       name="youtube"
                       type="text"
-                      placeholder="Youtube"
+                      placeholder="Youtube Link"
                       value={recipe.youtube}
                       onChange={(e) => handleChange(e)}
                     ></input>
                   </div>
                   <div className="flex flex-row items-center">
                     <label
-                      htmlFor="chefkoch"
-                      className="text-white text-lg w-2/6"
+                      htmlFor="tiktok"
+                      className="text-white text-lg w-2/6 p-1"
                     >
-                      <GiChefToque className="text-green-800 w-12 h-12"></GiChefToque>
+                      <FaTiktok className="text-white w-12 h-12"></FaTiktok>
                     </label>
                     <input
                       className="bg-white rounded-md max-h-10 w-40 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10 "
                       id="tiktok"
                       name="tiktok"
                       type="text"
-                      placeholder="TikTok"
+                      placeholder="TikTok Link"
                       value={recipe.tiktok}
                       onChange={(e) => handleChange(e)}
                     ></input>
@@ -648,7 +797,7 @@ function Baukasten() {
             className="mb-5 bg-opacity-90 bg-dark-blue p-4 text-white border-2 border-bright-orange rounded-3xl flex w-full flex-col space-y-3"
           >
             <div className="w-full flex items-center justify-center py-2">
-              <h2 className="text-2xl font-medium">Schritte</h2>
+              <h2 className="text-xl font-medium">Schritte</h2>
             </div>
             {steps.map((step, index) => {
               return (
@@ -724,7 +873,7 @@ function Baukasten() {
                 </div>
               )
             })}
-            <div className="flex w-full p-4 space-x-80">
+            <div className="flex w-full p-4 gap-x-20 lg:gap-x-80">
               <div className="flex flex-row w-3/6 justify-end space-x-2 ">
                 <button
                   type="button"
@@ -755,12 +904,11 @@ function Baukasten() {
           >
             <div className="w-full flex justify-center">
               <h2 className="text-xl text-white font-medium py-2 pb-4">
-                Bild für dein Rezept:
+                Bild von dem fertigen Gericht
               </h2>
             </div>
 
             <div className="">
-              {console.log(selectedImage)}
               {selectedImage ? (
                 <div className="max-h-[260px] w-full items-center justify-center flex">
                   <button
@@ -850,14 +998,14 @@ function Baukasten() {
               className="w-full flex flex-row justify-evenly py-6"
             >
               <Link href="/">
-                <button className="relative w-60 flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-gray-600 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bright-orange">
+                <button className="relative w-60 flex justify-center py-2 px-4 border border-transparent text-xl font-medium rounded-md text-white bg-gray-600 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bright-orange">
                   Cancel
                 </button>
               </Link>
               <button
                 disabled={status === "submitted" ? true : false}
                 type="submit"
-                className="relative items-center disabled:bg-gray-400 disabled:cursor-default cursor-pointer w-60 flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-bright-orange hover:bg-orange-700 duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bright-orange"
+                className="relative items-center disabled:bg-gray-400 disabled:cursor-default cursor-pointer w-60 flex justify-center py-2 px-4 border border-transparent text-xl font-medium rounded-md text-white bg-bright-orange hover:bg-orange-700 duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bright-orange"
               >
                 {status === "unsubmitted" ? (
                   "Rezept hochladen"

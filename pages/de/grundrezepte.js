@@ -6,6 +6,7 @@ import tagData from "../../data/tagData"
 import recipeData from "../../data/recipeData"
 import { useContext } from "react"
 import AppContext from "../../helpers/AppContext"
+import Image from "next/image"
 
 function GrundRezepte() {
   const tags = tagData
@@ -286,14 +287,15 @@ function GrundRezepte() {
             <div
               key={index}
               id="rezept-card"
-              className="flex flex-col border border-opacity-10 hover:-translate-y-[2px] hover:-translate-x-[2px] shadow-md shadow-gray-500 dark:shadow-black border-gray-300 items-center w-5/6 my-2 p-1 rounded-lg lg:mx-7 group cursor-pointer hover:bg-gray-600 dark:hover:bg-dark-blue--1"
+              className="flex flex-col border w-44 border-opacity-10 hover:-translate-y-[2px] hover:-translate-x-[2px] shadow-md shadow-gray-500 dark:shadow-black border-gray-300 items-center w-5/6 my-2 p-1 rounded-lg lg:mx-7 group cursor-pointer hover:bg-gray-600 dark:hover:bg-dark-blue--1"
             >
-              <div className="justify-center items-center h-max ">
-                <img
+              <div className="relative justify-center items-center h-40 w-40">
+                <Image
                   className="rounded-xl"
                   src={item.image}
+                  layout="fill"
                   alt={item.id}
-                ></img>
+                ></Image>
               </div>
               <div className="flex flex-col text-sand-white justify-center items-center h-16">
                 <p>{item.name}</p>

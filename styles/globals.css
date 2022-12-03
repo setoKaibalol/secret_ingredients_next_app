@@ -20,7 +20,7 @@
 
 ::-webkit-scrollbar-track {
   border-radius: 10px;
-  margin-top: 64px;
+
   background: rgba(0, 0, 0, 0.1);
 }
 ::-webkit-scrollbar-thumb {

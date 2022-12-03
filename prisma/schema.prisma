@@ -72,14 +72,13 @@ model rezept {
   utensilien         String?
   youtube            String?
   instagram          String?
-  chefkoch           String?
+  tiktok             String?
   aufrufe            Int               @default(0)
   dislikes           Int               @default(0)
   kommentare         rezeptKommentar[]
   image              String
   typ                String
-  kategorie          kategorien        @relation(fields: [kategorienId], references: [id])
-  kategorienId       Int
+  kategorien         kategorien[]
   tags               tags[]
   like               rezeptBewertung[]
 }

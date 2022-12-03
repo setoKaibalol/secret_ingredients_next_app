@@ -2,7 +2,14 @@ import prisma from "../../../prisma/PrismaClient"
 
 export default async function handler(req, res) {
   if (req.body.call === "rezept-upload") {
-    console.log(req.body.data.kategorie)
+    const handleKategorien = (kategorien) => {
+      const array = []
+      kategorien.forEach((kategorie) => {
+        array.push({ name: kategorie.value })
+      })
+      return array
+    }
+
     await prisma.rezept
       .create({
         data: {
@@ -22,9 +29,7 @@ export default async function handler(req, res) {
             },
           },
           kategorie: {
-            connect: {
-              name: req.body.data.kategorie,
-            },
+            connect: handleKategorien(req.body.data.kategorien),
           },
           name: req.body.data.name,
           zubereitungszeit: req.body.data.zubereitungszeit,

@@ -11,7 +11,6 @@ import { BsChevronUp, BsArrow90DegDown } from "react-icons/bs"
 import { CiForkAndKnife } from "react-icons/ci"
 import { AiFillYoutube, AiFillInstagram } from "react-icons/ai"
 import { Disclosure, Transition } from "@headlessui/react"
-import { useScrollTo, useScrollBy } from "react-use-window-scroll"
 import { useSession } from "next-auth/react"
 import AppContext from "../../../helpers/AppContext"
 import MoonLoader from "react-spinners/MoonLoader"
@@ -328,7 +327,7 @@ export default function Recipe(props) {
             <ul className="space-y-4">
               {steps.map((step, index) => (
                 <li
-                  className="rounded-md w-full border flex justify-start shadow-xl p-4 bg-cover bg-[url('https://www.betterwood.de/wp-content/webpc-passthru.php?src=https://www.betterwood.de/wp-content/uploads/2021/02/Schneidebrett-Holz.jpg&nocache=1')]"
+                  className="rounded-md w-full  flex justify-start shadow-xl p-4 bg-contain bg-[url('https://img.freepik.com/fotos-kostenlos/stein-textur_1194-5557.jpg?w=2000')]"
                   key={index}
                 >
                   <div
@@ -337,12 +336,12 @@ export default function Recipe(props) {
                   >
                     <div className="w-[70%] flex flex-row">
                       <div className="w-1/6 h-full">
-                        <p className="text-2xl font-medium bg-white bg-opacity-10 text-black w-min p-4 rounded-xl shadow-gray-800 shadow-inner">
+                        <p className="text-2xl font-medium bg-white bg-opacity-30 text-black w-min p-4 rounded-xl shadow-gray-800 shadow-inner">
                           {step.nummer}.
                         </p>
                       </div>
                       <div id="step-text" className="w-4/6">
-                        <p className="text-lg bg-white bg-opacity-10 shadow-gray-800 shadow-inner font-medium text-black rounded-xl p-4">
+                        <p className="text-lg bg-white bg-opacity-30 shadow-gray-800 shadow-inner font-medium text-black rounded-xl p-4">
                           {step.text}
                         </p>
                       </div>
