@@ -88,7 +88,7 @@ export default function Header() {
   }
 
   return (
-    <div className="fixed md:sticky w-full xl:h-20 h-16 z-40 top-0 bg-transparent md:bg-dark-blue md:backdrop-filter md:backdrop-blur-lg md:bg-opacity-75 md:border-b md:border-bright-orange">
+    <nav className="fixed md:sticky w-full xl:h-20 h-16 z-40 top-0 bg-transparent md:bg-dark-blue md:backdrop-filter md:backdrop-blur-lg md:bg-opacity-75 md:border-b md:border-bright-orange">
       <div className="flex flex-row w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 justify-between">
         <div className="flex flex-row justify-between md:justify-start w-full h-full items-center md:space-x-8">
           <div id="desktop-logo" className="md:flex hidden h-full py-1 ">
@@ -185,6 +185,6 @@ export default function Header() {
           <AuthButton></AuthButton>
         </div>
       </div>
-    </div>
+    </nav>
   )
 }

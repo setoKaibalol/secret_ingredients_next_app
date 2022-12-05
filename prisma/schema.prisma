@@ -103,11 +103,12 @@ model rezeptStep {
 }
 
 model rezeptKommentar {
-  id       Int    @id @default(autoincrement())
-  author   User   @relation(fields: [userId], references: [id])
+  id       Int      @id @default(autoincrement())
+  author   User     @relation(fields: [userId], references: [id])
+  postedAt DateTime @default(now())
   userId   String
   text     String
-  rezept   rezept @relation(fields: [rezeptId], references: [id], onDelete: Cascade)
+  rezept   rezept   @relation(fields: [rezeptId], references: [id], onDelete: Cascade)
   rezeptId Int
 }
 

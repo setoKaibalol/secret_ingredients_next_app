@@ -362,18 +362,24 @@ function Baukasten() {
       <div className="flex w-full md:w-[90%] 2xl:w-[80%] m-auto">
         <form
           onSubmit={handleSubmit}
-          className="w-full flex flex-col mt-10 items-center"
+          className="w-full flex flex-col items-center"
         >
           <div
             id="rezeptName-input-div"
-            className="w-4/6 mb-10 items-center flex flex-row justify-center bg-opacity-90 bg-dark-blue border border-bright-orange rounded-3xl"
+            className="w-4/6 my-6 items-center flex flex-row justify-center bg-opacity-90 bg-dark-blue border border-bright-orange rounded-3xl"
           >
             <div className=" w-full flex items-center flex-col justify-center p-4">
               <label
                 htmlFor="rezeptName-input"
-                className="text-bright-orange font-medium text-3xl mb-4 underline underline-offset-4"
+                className=" hidden sm:flex text-bright-orange font-medium text-3xl mb-4 underline underline-offset-4"
               >
                 Name deines Rezepts
+              </label>
+              <label
+                htmlFor="rezeptName-input"
+                className="sm:hidden flex text-bright-orange font-medium text-2xl mb-4 underline underline-offset-4"
+              >
+                Rezeptname
               </label>
               <input
                 id="rezeptName-input"
@@ -388,7 +394,7 @@ function Baukasten() {
           </div>
           {user ? (
             user.role === "ADMIN" ? (
-              <div className="w-full mb-5 items-center flex flex-row justify-center bg-opacity-90 bg-dark-blue border border-bright-orange rounded-3xl">
+              <div className="w-full mb-5 items-center flex flex-row justify-center bg-opacity-90 bg-dark-blue border-bright-orange border-y-2 md:border-2 md:rounded-3xl">
                 <div className="w-full flex flex-col items-center justify-center p-4">
                   <label
                     htmlFor="recipe-type-select"
@@ -397,7 +403,6 @@ function Baukasten() {
                     Rezept Typ
                   </label>
                   <select
-                    required
                     className="text-black bg-white rounded-full focus:outline-none px-4 py-2 focus:ring-bright-orange focus:border-bright-orange"
                     id="recipe-type-select"
                     name="typ"
@@ -423,22 +428,22 @@ function Baukasten() {
           ></label>
           <div
             id="zutaten-list"
-            className="flex h-auto w-full border-2 min-h-[235px] bg-opacity-90 bg-dark-blue border-bright-orange mb-5 p-4 items-baseline rounded-3xl "
+            className="flex h-auto w-full min-h-[235px] bg-opacity-90 bg-dark-blue border-bright-orange mb-5 p-4 items-baseline border-y-2 md:border-2 md:rounded-3xl "
           >
             <div className="w-full h-full">
               <div className="h-10 flex flex-row">
-                <div className="w-1/3 flex">
+                <div className="w-1/2 md:w-1/3 flex">
                   <div className="w-5/6 flex justify-center font-medium text-white text-xl">
                     <h3>Zutaten</h3>
                   </div>
                 </div>
-                <div className="w-1/3">
+                <div className="w-1/2 md:w-1/3">
                   <div className="flex justify-center font-medium text-white text-xl">
                     <h3>Mengeneinheiten</h3>
                   </div>
                 </div>
-                <div className="w-1/3">
-                  <div className="flex justify-center font-medium text-white text-xl">
+                <div className="w-0 md:w-1/3">
+                  <div className="hidden md:flex justify-center font-medium text-white text-xl">
                     <h3>Bemerkungen</h3>
                   </div>
                 </div>
@@ -448,17 +453,17 @@ function Baukasten() {
                 {zutaten?.map((zutat, index) => {
                   return (
                     <li
-                      className="flex flex-row px-2 pb-1 w-full border-dark-blue--2"
+                      className="flex flex-row gap-x-2 pb-1 w-full border-dark-blue--2"
                       key={index}
                     >
-                      <div className="w-1/3 ">
+                      <div className="w-1/2 md:w-1/3">
                         <div className="flex flex-col">
                           <label
                             htmlFor="zutat-input"
                             className="text-white text-sm"
                           ></label>
                           <input
-                            className="bg-white appearance-none rounded-full relative block w-5/6 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
+                            className="bg-white appearance-none rounded-full relative block px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
                             id="zutat-input"
                             required
                             type={"text"}
@@ -471,14 +476,14 @@ function Baukasten() {
                           ></input>
                         </div>
                       </div>
-                      <div className="w-1/3 space-x-1 justify-center flex flex-row">
+                      <div className="w-1/2 md:w-1/3 gap-x-1 justify-center flex flex-row">
                         <div className="flex flex-col w-2/6">
                           <label
                             htmlFor="zutat-input"
                             className="text-white text-sm text-center"
                           ></label>
                           <input
-                            className="bg-white appearance-none rounded-full relative block w-full px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
+                            className="bg-white appearance-none rounded-md relative block w-full px-2 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
                             id="zutat-input"
                             name="menge"
                             value={zutat.menge}
@@ -489,14 +494,13 @@ function Baukasten() {
                             placeholder="..."
                           ></input>
                         </div>
-                        <div className=""></div>
-                        <div className="flex flex-col w-2/6">
+                        <div className="flex flex-col w-4/6 md:w-2/6">
                           <label
                             htmlFor="zutat-input"
-                            className="text-white text-sm ml-4"
+                            className="text-white text-sm"
                           ></label>
                           <input
-                            className="appearance-none bg-white rounded-full relative block w-full px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
+                            className="appearance-none bg-white rounded-md relative block w-full px-2 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10"
                             id="zutat-input"
                             name="einheit"
                             value={zutat.einheit}
@@ -508,13 +512,13 @@ function Baukasten() {
                           ></input>
                         </div>
                       </div>
-                      <div className="flex flex-col w-1/3 items-end">
+                      <div className="hidden md:flex flex-col w-1/3 items-center">
                         <label
                           htmlFor="zutat-input"
                           className="text-white text-sm pl-4"
                         ></label>
                         <input
-                          className="appearance-none bg-white rounded-full max-h-10 relative block w-5/6 px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10 "
+                          className="appearance-none bg-white rounded-full max-h-10 relative block px-4 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-bright-orange focus:border-bright-orange focus:z-10 "
                           id="zutat-input"
                           name="kommentar"
                           value={zutat.kommentar}
@@ -551,7 +555,7 @@ function Baukasten() {
           </div>
           <div
             id="recipe-details"
-            className="mb-5 bg-opacity-90 bg-dark-blue p-4 text-white border-2 border-bright-orange rounded-3xl flex w-full flex-col space-y-3"
+            className="mb-5 bg-opacity-90 bg-dark-blue p-4 text-white border-bright-orange border-y-2 md:border-2 md:rounded-3xl flex w-full flex-col space-y-3"
           >
             <div className="w-full flex flex-col items-center justify-center py-2 space-y-10">
               <div className="flex flex-wrap w-full space-y-4 items-end">
@@ -794,7 +798,7 @@ function Baukasten() {
           ></label>
           <div
             id="recipe-steps"
-            className="mb-5 bg-opacity-90 bg-dark-blue p-4 text-white border-2 border-bright-orange rounded-3xl flex w-full flex-col space-y-3"
+            className="mb-5 bg-opacity-90 bg-dark-blue p-4 text-white border-bright-orange border-y-2 md:border-2 md:rounded-3xl flex w-full flex-col space-y-3"
           >
             <div className="w-full flex items-center justify-center py-2">
               <h2 className="text-xl font-medium">Schritte</h2>
@@ -802,10 +806,10 @@ function Baukasten() {
             {steps.map((step, index) => {
               return (
                 <div
-                  className="flex flex-row space-x-4 rounded-md p-2"
+                  className="flex flex-row gap-x-4 rounded-md p-0 sm:p-2"
                   key={index}
                 >
-                  <div className="flex flex-col w-4/6">
+                  <div className="flex flex-col w-5/6 sm:w-4/6">
                     <label htmlFor="step-1"></label>
                     <div id="step-1 w-full">
                       <textarea
@@ -822,7 +826,7 @@ function Baukasten() {
                       ></textarea>
                     </div>
                   </div>
-                  <div className="flex flex-row items-center justify-center w-2/6">
+                  <div className="flex flex-row items-center justify-center w-1/6 sm:w-2/6">
                     {steps[index].imageFile ? (
                       <div className="items-center justify-center flex w-full">
                         <div className="items-center flex w-full justify-center h-full">
@@ -845,9 +849,15 @@ function Baukasten() {
                       <div className="flex w-full items-center flex-col">
                         <label
                           htmlFor={`stepImage-input ${step.nummer}`}
-                          className="cursor-pointer"
+                          className="cursor-pointer hidden sm:flex"
                         >
                           Bild für Schritt {step.nummer} (optional)
+                        </label>
+                        <label
+                          htmlFor={`stepImage-input ${step.nummer}`}
+                          className="cursor-pointer sm:hidden flex"
+                        >
+                          Bild {step.nummer} (optional)
                         </label>
                         <label
                           id={`stepImage-input-label ${step.nummer}`}
@@ -900,7 +910,7 @@ function Baukasten() {
           ></label>
           <div
             id="recipe-image-upload"
-            className="h-[380px] w-full p-4 bg-dark-blue w-lg mb-10 rounded-3xl bg-opacity-90 border-2 border-bright-orange"
+            className="h-[380px] w-full p-4 bg-dark-blue w-lg mb-10 bg-opacity-90 border-y-2 md:border-2 md:rounded-3xl border-bright-orange"
           >
             <div className="w-full flex justify-center">
               <h2 className="text-xl text-white font-medium py-2 pb-4">
@@ -954,7 +964,7 @@ function Baukasten() {
                           or drag and drop
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-400">
-                          SVG, PNG, JPG or GIF (MAX. 800x400px)
+                          SVG, PNG, JPG or GIF
                         </p>
                       </div>
                       <input
@@ -975,7 +985,7 @@ function Baukasten() {
           </div>
           <div
             id="status-div"
-            className="items-center flex flex-col justify-center bg-opacity-90 bg-dark-blue p-3 border border-bright-orange mb-5 rounded-3xl w-5/6 "
+            className="items-center flex flex-col justify-center bg-opacity-90 bg-dark-blue p-3 border-bright-orange mb-5 border-y-2 md:border-2 md:rounded-3xl w-full xl:w-5/6 "
           >
             {status === "imagesUploading" ? (
               "Bilder werden hochgeladen..."
@@ -995,20 +1005,20 @@ function Baukasten() {
 
             <div
               id="cancel/submit-buttons"
-              className="w-full flex flex-row justify-evenly py-6"
+              className="w-full flex flex-row justify-evenly py-6 gap-x-2"
             >
               <Link href="/">
-                <button className="relative w-60 flex justify-center py-2 px-4 border border-transparent text-xl font-medium rounded-md text-white bg-gray-600 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bright-orange">
+                <button className="relative w-60 flex justify-center py-2 px-4 border border-transparent text-lg font-medium rounded-md text-white bg-gray-600 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bright-orange">
                   Cancel
                 </button>
               </Link>
               <button
                 disabled={status === "submitted" ? true : false}
                 type="submit"
-                className="relative items-center disabled:bg-gray-400 disabled:cursor-default cursor-pointer w-60 flex justify-center py-2 px-4 border border-transparent text-xl font-medium rounded-md text-white bg-bright-orange hover:bg-orange-700 duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bright-orange"
+                className="relative items-center disabled:bg-gray-400 disabled:cursor-default cursor-pointer w-60 flex justify-center py-2 px-4 border border-transparent text-lg font-medium rounded-md text-white bg-bright-orange hover:bg-orange-700 duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bright-orange"
               >
                 {status === "unsubmitted" ? (
-                  "Rezept hochladen"
+                  "Hochladen"
                 ) : status === "loading" ? (
                   <MoonLoader color="#033249" size={19}></MoonLoader>
                 ) : status === "submitted" ? (
