@@ -3,7 +3,7 @@ import prisma from "../../../prisma/PrismaClient"
 export default async function handler(req, res) {
   if (req.method === "POST") {
     if (req.body.call === "list-grundrezepte") {
-      await prisma.rezept
+      const result = await prisma.rezept
         .findMany({
           where: {
             typ: "grundrezept",
@@ -18,7 +18,7 @@ export default async function handler(req, res) {
       res.status(200).send(result)
     }
     if (req.body.call === "list-geheimrezepte") {
-      await prisma.rezept
+      const result = await prisma.rezept
         .findMany({
           where: {
             typ: "geheimrezept",
@@ -33,7 +33,7 @@ export default async function handler(req, res) {
       res.status(200).send(result)
     }
     if (req.body.call === "list-rezepte") {
-      await prisma.rezept.findMany({}).catch((err) => {
+      const result = await prisma.rezept.findMany({}).catch((err) => {
         console.log("error:", req.body.call)
         console.log(err)
         res.status(500).send("failed")
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
       res.status(200).send(result)
     }
     if (req.body?.call === "get-rezept") {
-      await prisma.rezept
+      const result = await prisma.rezept
         .findFirst({
           where: {
             id: req.body.data.id,
