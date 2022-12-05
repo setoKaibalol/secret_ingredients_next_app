@@ -9,13 +9,11 @@ export default async function handler(req, res) {
             typ: "grundrezept",
           },
         })
-        .then((result) => {
-          res.status(200).send(result)
-        })
         .catch((err) => {
           console.log(err)
           res.status(500).send("failed")
         })
+      res.status(200).send(result)
     }
     if (req.body.call === "list-geheimrezepte") {
       await prisma.rezept
@@ -24,24 +22,18 @@ export default async function handler(req, res) {
             typ: "geheimrezept",
           },
         })
-        .then((result) => {
-          res.status(200).send(result)
-        })
         .catch((err) => {
           console.log(err)
           res.status(500).send("failed")
         })
+      res.status(200).send(result)
     }
     if (req.body.call === "list-rezepte") {
-      await prisma.rezept
-        .findMany({})
-        .then((result) => {
-          res.status(200).send(result)
-        })
-        .catch((err) => {
-          console.log(err)
-          res.status(500).send("failed")
-        })
+      await prisma.rezept.findMany({}).catch((err) => {
+        console.log(err)
+        res.status(500).send("failed")
+      })
+      res.status(200).send(result)
     }
     if (req.body?.call === "get-rezept") {
       await prisma.rezept
@@ -50,13 +42,11 @@ export default async function handler(req, res) {
             id: req.body.data.id,
           },
         })
-        .then((result) => {
-          res.status(200).send(result)
-        })
         .catch((err) => {
           console.log(err)
           res.status(500).send("failed")
         })
+      res.status(200).send(result)
     }
   } else {
     res.setHeader("Allow", "POST")
