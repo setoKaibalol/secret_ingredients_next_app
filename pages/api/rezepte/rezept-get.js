@@ -10,6 +10,8 @@ export default async function handler(req, res) {
           },
         })
         .catch((err) => {
+          console.log("error:", req.body.call)
+
           console.log(err)
           res.status(500).send("failed")
         })
@@ -23,13 +25,16 @@ export default async function handler(req, res) {
           },
         })
         .catch((err) => {
+          console.log("error:", req.body.call)
           console.log(err)
+
           res.status(500).send("failed")
         })
       res.status(200).send(result)
     }
     if (req.body.call === "list-rezepte") {
       await prisma.rezept.findMany({}).catch((err) => {
+        console.log("error:", req.body.call)
         console.log(err)
         res.status(500).send("failed")
       })
@@ -43,6 +48,7 @@ export default async function handler(req, res) {
           },
         })
         .catch((err) => {
+          console.log("error:", req.body.call)
           console.log(err)
           res.status(500).send("failed")
         })
