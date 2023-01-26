@@ -28,7 +28,7 @@ export default async function handler(req, res) {
               data: req.body.data.steps,
             },
           },
-          kategorie: {
+          kategorien: {
             connect: handleKategorien(req.body.data.kategorien),
           },
           name: req.body.data.name,

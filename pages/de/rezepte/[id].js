@@ -30,14 +30,14 @@ export async function getServerSideProps(context) {
       zutaten: true,
       steps: true,
       author: true,
-      kategorie: true,
+      kategorien: true,
       like: true,
     },
   })
 
   return {
     props: {
-      rezept: rezept,
+      rezept: JSON.parse(JSON.stringify(rezept)),
     },
   }
 }
@@ -47,13 +47,12 @@ export default function Recipe(props) {
   const [rezepte, setRezepte, user, setUser, kategorien, setKategorien] =
     useContext(AppContext)
 
-  const recipe = props.rezept
-  const zutaten = props.rezept.zutaten
-  const steps = props.rezept.steps
-  const author = props.rezept.author
-  const kategorie = props.rezept.kategorie
-  const kommentare = props.rezept.kommentare
-  console.log(kommentare)
+  const recipe = props?.rezept
+  const zutaten = props?.rezept?.zutaten
+  const steps = props?.rezept?.steps
+  const author = props?.rezept?.author
+  const kommentare = props?.rezept?.kommentare
+  const rezeptKategorien = props?.rezept?.kategorien
   const schritteDiv = useRef(null)
   const zutatenDiv = useRef(null)
   const zutatenDivMobile = useRef(null)
@@ -150,12 +149,21 @@ export default function Recipe(props) {
         <p className="text-gray-300 font-light text-lg">by {author.name}</p>
       </div>
 
-      <div className="w-full 2xl:w-[90%] flex-col flex justify-between px-4 bg-opacity-90 bg-dark-blue border border-bright-orange rounded-md sm:rounded-3xl">
+      <div className="w-full items-center 2xl:w-[90%] flex-col flex justify-between px-4 bg-opacity-90 bg-dark-blue border border-bright-orange rounded-md sm:rounded-3xl">
         <div className="w-full flex flex-col xl:flex-row lg:items-center">
           <div className="flex flex-col w-full xl:w-4/6 ">
             <div className="flex flex-row items-end justify-center sm:justify-start">
-              <div className="sm:flex hidden w-full h-8 text-lg text-gray-300 font-light pl-4">
-                Rezepte / {kategorie.name}
+              <div className="sm:flex hidden w-full h-10 text-lg text-gray-300 font-light pl-4 gap-x-2 sm:flex-row items-center">
+                Rezepte /{" "}
+                {rezeptKategorien.map((item, index) => (
+                  <li key={index}>
+                    <Link href="/de/grundrezepte">
+                      <a className="bg-bright-orange text-gray-200 hover:bg-orange-500 hover:scale-105 px-2 py-1 rounded-md flex text-center text-sm justify-center items-center font-medium">
+                        {item.name}
+                      </a>
+                    </Link>
+                  </li>
+                ))}
               </div>
               <div
                 id="mobile"
@@ -164,16 +172,29 @@ export default function Recipe(props) {
                 {recipe.name}
               </div>
             </div>
-            <div className="relative w-auto h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px]">
-              <Image
-                src={recipe.image}
-                objectFit={"cover"}
-                layout="fill"
-                placeholder="blur"
-                blurDataURL={recipe.image}
-                className="rounded-md sm:rounded-3xl"
-                priority
-              ></Image>
+            <div className="relative w-auto h-[370px] sm:h-[470px] md:h-[500px] lg:h-[570px]">
+              <div className="sm:hidden flex flex-wrap w-full h-7 mb-6 mt-1 gap-x-1 justify-center gap-y-1">
+                {rezeptKategorien.map((item, index) => (
+                  <li key={index}>
+                    <Link href="/de/grundrezepte">
+                      <a className="bg-bright-orange text-gray-200 hover:bg-orange-500 hover:scale-105 px-2 rounded-md flex text-center text-sm justify-center items-center font-medium">
+                        {item.name}
+                      </a>
+                    </Link>
+                  </li>
+                ))}
+              </div>
+              <div className="relative w-auto h-[300px] sm:h-[400px] md:h-[500px] lg:h-[570px]">
+                <Image
+                  src={recipe.image}
+                  objectFit={"cover"}
+                  layout="fill"
+                  placeholder="blur"
+                  blurDataURL={recipe.image}
+                  className="rounded-md sm:rounded-3xl"
+                  priority
+                ></Image>
+              </div>
             </div>
             <div className="sm:pl-4 w-full h-16 sm:items-start flex flex-col justify-center items-center">
               <div className="flex flex-row flex-wrap space-x-2">
@@ -285,7 +306,7 @@ export default function Recipe(props) {
         </div>
         <div
           id="zutatenliste-mobile"
-          className="xl:hidden flex w-full xl:w-3/6 shadow-xl sm:p-8 rounded-xl mb-40"
+          className="xl:hidden flex w-[80%] md:w-full xl:w-3/6 shadow-xl sm:p-8 rounded-xl mb-40"
           ref={zutatenDivMobile}
         >
           <div className="w-full h-20">
@@ -324,17 +345,17 @@ export default function Recipe(props) {
                 Schritte:
               </h2>
             </div>
-            <ul className="space-y-4">
+            <ul className="space-y-4 flex justify-center flex-col items-center">
               {steps.map((step, index) => (
                 <li
-                  className="rounded-md w-full  flex justify-start shadow-xl p-4 bg-contain bg-[url('https://img.freepik.com/fotos-kostenlos/stein-textur_1194-5557.jpg?w=2000')]"
+                  className="rounded-md border border-gray-900 min-w-[80%] md:w-full flex md:justify-start shadow-xl p-4 bg-contain bg-[url('https://img.freepik.com/fotos-kostenlos/stein-textur_1194-5557.jpg?w=2000')]"
                   key={index}
                 >
                   <div
                     id="desktop"
-                    className="hidden md:flex flex-row justify-between w-full"
+                    className="hidden md:flex flex-row justify-between sm:w-full"
                   >
-                    <div className="w-[70%] flex flex-row">
+                    <div className="w-[80%] flex flex-row">
                       <div className="w-1/6 h-full">
                         <p className="text-2xl font-medium bg-white bg-opacity-30 text-black w-min p-4 rounded-xl shadow-gray-800 shadow-inner">
                           {step.nummer}.
@@ -348,7 +369,7 @@ export default function Recipe(props) {
                     </div>
                     <div
                       id="step-image"
-                      className="w-52 rounded-lg border flex relative h-40"
+                      className="w-40 rounded-lg border flex relative h-40"
                     >
                       <Image
                         className="rounded-lg"
@@ -363,13 +384,13 @@ export default function Recipe(props) {
                     id="mobile"
                     className="flex md:hidden flex-row justify-between w-full"
                   >
-                    <div className="w-full flex flex-col space-y-4">
+                    <div className="w-full flex flex-col space-y-4 items-center">
                       <div
                         id="step-image"
-                        className="w-full rounded-lg border flex relative h-40 "
+                        className="w-40 rounded-lg border flex relative h-40 "
                       >
                         <div className="w-1/6 h-full absolute z-20">
-                          <p className="text-2xl font-medium bg-white bg-opacity-40 text-black w-min p-4  rounded-lg shadow-gray-800 shadow-inner">
+                          <p className="text-2xl font-medium bg-white bg-opacity-30 text-black w-min p-4 rounded-lg shadow-gray-800 shadow-inner">
                             {step.nummer}.
                           </p>
                         </div>
@@ -384,7 +405,7 @@ export default function Recipe(props) {
                         ></Image>
                       </div>
 
-                      <div id="step-text" className="w-full">
+                      <div id="step-text" className="w-full sm:w-80">
                         <p className="text-lg bg-white bg-opacity-10 shadow-gray-800 shadow-inner font-medium text-black rounded-xl p-4">
                           {step.text}
                         </p>

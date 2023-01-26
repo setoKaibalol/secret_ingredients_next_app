@@ -287,7 +287,7 @@ function GrundRezepte() {
             <div
               key={index}
               id="rezept-card"
-              className="flex flex-col border w-44 border-opacity-10 hover:-translate-y-[2px] hover:-translate-x-[2px] shadow-md shadow-gray-500 dark:shadow-black border-gray-300 items-center w-5/6 my-2 p-1 rounded-lg lg:mx-7 group cursor-pointer hover:bg-gray-600 dark:hover:bg-dark-blue--1"
+              className="flex flex-col border border-opacity-10 hover:-translate-y-[2px] hover:-translate-x-[2px] shadow-md shadow-gray-500 dark:shadow-black border-gray-300 items-center w-5/6 my-2 p-1 rounded-lg lg:mx-7 group cursor-pointer hover:bg-gray-600 dark:hover:bg-dark-blue--1"
             >
               <div className="relative justify-center items-center h-40 w-40">
                 <Image
