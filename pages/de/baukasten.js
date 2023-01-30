@@ -488,6 +488,7 @@ function Baukasten() {
                             name="menge"
                             value={zutat.menge}
                             type={"number"}
+                            step="0.01"
                             onChange={(e) =>
                               handleChangeZutaten(e, zutat, index)
                             }
