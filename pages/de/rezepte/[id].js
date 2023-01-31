@@ -153,18 +153,18 @@ export default function Recipe(props) {
         <div className="w-full flex flex-col xl:flex-row lg:items-center">
           <div className="flex flex-col w-full xl:w-4/6 ">
             <div className="flex flex-row items-end justify-center sm:justify-start">
-              <div className="sm:flex hidden w-full h-10 text-lg text-gray-300 font-light pl-4 gap-x-2 sm:flex-row items-center">
-                Rezepte /{" "}
+              <ul className="sm:flex hidden w-full h-10 text-lg text-gray-300 font-light pl-4 gap-x-2 sm:flex-row items-center">
+                <p>Rezepte / </p>
                 {rezeptKategorien.map((item, index) => (
                   <li key={index}>
                     <Link href="/de/grundrezepte">
-                      <a className="bg-bright-orange text-gray-200 hover:bg-orange-500 hover:scale-105 px-2 py-1 rounded-md flex text-center text-sm justify-center items-center font-medium">
+                      <a className="bg-bright-orange text-gray-200 hover:bg-orange-500 hover:scale-105 px-2 py-1 rounded-md flex text-center text-sm justify-center items-center">
                         {item.name}
                       </a>
                     </Link>
                   </li>
                 ))}
-              </div>
+              </ul>
               <div
                 id="mobile"
                 className="sm:hidden flex h-[66px] text-white text-lg font-medium max-w-[72%] text-center justify-center pb-2 underline"

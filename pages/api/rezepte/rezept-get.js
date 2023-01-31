@@ -32,6 +32,21 @@ export default async function handler(req, res) {
         })
       res.status(200).send(result)
     }
+    if (req.body.call === "list-klassische-rezepte") {
+      const result = await prisma.rezept
+        .findMany({
+          where: {
+            typ: "Klassisches Rezept",
+          },
+        })
+        .catch((err) => {
+          console.log("error:", req.body.call)
+          console.log(err)
+
+          res.status(500).send("failed")
+        })
+      res.status(200).send(result)
+    }
     if (req.body.call === "list-rezepte") {
       const result = await prisma.rezept.findMany({}).catch((err) => {
         console.log("error:", req.body.call)

@@ -410,6 +410,7 @@ function Baukasten() {
                     onChange={(e) => handleChange(e)}
                   >
                     <option>Grundrezept</option>
+                    <option>Klassisches Rezept</option>
                     <option>Geheimrezept</option>
                     <option>Userrezept</option>
                   </select>

@@ -21,6 +21,10 @@ export default function Header() {
           to: "/de/geheimrezepte",
         },
         {
+          name: "klassische Rezepte",
+          to: "/de/klassische-rezepte",
+        },
+        {
           name: "Nutzerrezepte",
           to: "/de/nutzerrezepte",
         },
