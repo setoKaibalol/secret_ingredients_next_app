@@ -25,14 +25,6 @@ export default function Header() {
           to: "/de/klassische-rezepte",
         },
         {
-          name: "Nutzerrezepte",
-          to: "/de/nutzerrezepte",
-        },
-        {
-          name: "Über Uns",
-          to: "/de/about",
-        },
-        {
           name: "Baukasten",
           to: "/de/baukasten",
         },
